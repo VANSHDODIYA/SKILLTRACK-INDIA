@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expert Dashboard | SkillTrack India</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        body { background: #f5f7fb; }
+        .page { max-width: 1200px; margin: auto; padding: 50px 7%; }
+        .card { background: #fff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 22px; box-shadow: 0 10px 25px rgba(15,23,42,.04); }
+        .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin: 24px 0; }
+        .sessions { display: grid; gap: 16px; }
+        .session { border: 1px solid #e2e8f0; border-radius: 12px; padding: 18px; background: #fff; }
+        .muted { color: #64748b; }
+        .note-form { display: grid; gap: 10px; margin-top: 16px; }
+        textarea, input { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; box-sizing: border-box; }
+        button { border: 0; border-radius: 8px; padding: 10px 14px; background: #1d4ed8; color: #fff; font-weight: 700; cursor: pointer; }
+        @media(max-width: 800px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+    </style>
+</head>
+<body>
+<nav class="navbar"><div class="logo">SkillTrack India</div><div class="nav-links"><a href="/">Home</a><a href="/counselling">Counselling</a><a href="/dashboard">Admin Dashboard</a></div></nav>
+<main class="page">
+    <h1>Expert Dashboard</h1>
+    <p class="muted">Review learner context before sessions and record actionable counselling outcomes.</p>
+    <div class="grid">
+        <div class="card"><span class="muted">Today's Sessions</span><h2 id="todayCount">0</h2></div>
+        <div class="card"><span class="muted">Upcoming Sessions</span><h2 id="upcomingCount">0</h2></div>
+        <div class="card"><span class="muted">Pending Requests</span><h2 id="pendingCount">0</h2></div>
+        <div class="card"><span class="muted">Completed Sessions</span><h2 id="completedCount">0</h2></div>
+    </div>
+    <section class="sessions" id="sessions"></section>
+</main>
+<script>
+async function loadDashboard() {
+    const response = await fetch('/api/expert-dashboard');
+    const data = await response.json();
+    document.getElementById('todayCount').textContent = data.today.length;
+    document.getElementById('upcomingCount').textContent = data.upcoming.length;
+    document.getElementById('pendingCount').textContent = data.pending_requests.length;
+    document.getElementById('completedCount').textContent = data.completed.length;
+    const container = document.getElementById('sessions');
+    container.innerHTML = data.upcoming.map(session => `
+        <article class="session">
+            <h2>${session.candidate_name || 'Learner'}</h2>
+            <p class="muted">${session.session_date} at ${session.session_time} · ${session.status}</p>
+            <p><strong>Target career:</strong> ${session.target_role || 'Not specified'}</p>
+            <p><strong>Assessment:</strong> ${session.assessment_score == null ? 'Not completed' : session.assessment_score + '%'}</p>
+            <p><strong>Skills:</strong> ${session.skills || 'No skills recorded'}</p>
+            <p><strong>Employment:</strong> ${session.employment_status || 'Not specified'}</p>
+            <p><strong>Reason:</strong> ${session.reason || 'Not provided'}</p>
+            <details>
+                <summary>Record counselling outcome</summary>
+                <form class="note-form" onsubmit="saveNote(event, ${session.booking_id})">
+                    <textarea name="session_summary" placeholder="Session summary" required></textarea>
+                    <textarea name="identified_challenges" placeholder="Identified challenges"></textarea>
+                    <textarea name="recommended_skills" placeholder="Recommended skills"></textarea>
+                    <textarea name="recommended_courses" placeholder="Recommended courses"></textarea>
+                    <textarea name="recommended_jobs" placeholder="Recommended jobs"></textarea>
+                    <textarea name="next_steps" placeholder="Next steps"></textarea>
+                    <button type="submit">Save Outcome</button>
+                </form>
+            </details>
+        </article>`).join('') || '<div class="card">No counselling sessions yet.</div>';
+}
+async function saveNote(event, bookingId) {
+    event.preventDefault();
+    const form = event.target;
+    const payload = Object.fromEntries(new FormData(form).entries());
+    payload.booking_id = bookingId;
+    const response = await fetch('/api/counselling/notes', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload)});
+    const result = await response.json();
+    if (!response.ok) { alert(result.error || 'Unable to save outcome.'); return; }
+    form.innerHTML = '<strong>Outcome saved and learner recommendations updated.</strong>';
+    loadDashboard();
+}
+loadDashboard();
+</script>
+</body>
+</html>

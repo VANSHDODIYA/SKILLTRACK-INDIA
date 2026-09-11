@@ -1,0 +1,1238 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Dashboard - SkillTrack India</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+
+
+<body>
+
+
+<nav class="navbar">
+
+    <div class="logo">
+        SkillTrack India
+    </div>
+
+
+    <div class="nav-links">
+
+        <a href="/">Home</a>
+
+        <a href="/candidate">
+            Register Candidate
+        </a>
+
+        <a href="/candidates">
+            Candidates
+        </a>
+
+        <a href="/skill-gap">
+            Skill Gaps
+        </a>
+
+        <a href="/intelligence">
+            AI Intelligence
+        </a>
+
+        <a href="/assessments">
+            Assessments
+        </a>
+
+        <a href="/counselling">
+            Counselling
+        </a>
+
+        <a href="/expert-dashboard">
+            Expert Dashboard
+        </a>
+
+        <a href="/programs">
+            Programs
+        </a>
+
+        <a href="/employment">
+            Employment
+        </a>
+
+        <a href="/dashboard">
+            Dashboard
+        </a>
+
+    </div>
+
+</nav>
+
+
+
+<section style="padding:50px 7%;">
+
+    <div style="
+        max-width:1250px;
+        margin:auto;
+    ">
+
+
+        <h1 style="
+            font-size:42px;
+            margin-bottom:8px;
+        ">
+            Skill Intelligence Dashboard
+        </h1>
+
+
+        <p style="
+            color:#64748b;
+            font-size:17px;
+            margin-bottom:35px;
+        ">
+            A unified view of candidates, employment outcomes,
+            training performance and skilling impact.
+        </p>
+
+
+
+        <!-- ========================= -->
+        <!-- CANDIDATE KPI CARDS -->
+        <!-- ========================= -->
+
+        <div style="
+            display:grid;
+            grid-template-columns:repeat(4,1fr);
+            gap:20px;
+            margin-bottom:30px;
+        ">
+
+
+            <div class="card">
+
+                <p style="color:#64748b;">
+                    Total Candidates
+                </p>
+
+                <h1 id="totalCandidates">
+                    0
+                </h1>
+
+                <p style="color:#64748b;">
+                    Registered on platform
+                </p>
+
+            </div>
+
+
+
+            <div class="card">
+
+                <p style="color:#64748b;">
+                    Employed
+                </p>
+
+                <h1 id="employedCandidates">
+                    0
+                </h1>
+
+                <p style="color:#64748b;">
+                    Currently employed
+                </p>
+
+            </div>
+
+
+
+            <div class="card">
+
+                <p style="color:#64748b;">
+                    Unemployed
+                </p>
+
+                <h1 id="unemployedCandidates">
+                    0
+                </h1>
+
+                <p style="color:#64748b;">
+                    Require employment support
+                </p>
+
+            </div>
+
+
+
+            <div class="card">
+
+                <p style="color:#64748b;">
+                    Employment Rate
+                </p>
+
+                <h1 id="employmentRate">
+                    0%
+                </h1>
+
+                <p style="color:#64748b;">
+                    Candidate employment
+                </p>
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- ========================= -->
+        <!-- TRAINING KPI CARDS -->
+        <!-- ========================= -->
+
+        <div style="
+            display:grid;
+            grid-template-columns:repeat(4,1fr);
+            gap:20px;
+            margin-bottom:30px;
+        ">
+
+
+            <div class="card">
+
+                <p style="color:#64748b;">
+                    Training Enrolled
+                </p>
+
+                <h2 id="trainingEnrolled">
+                    0
+                </h2>
+
+                <p style="color:#64748b;">
+                    Across programs
+                </p>
+
+            </div>
+
+
+
+            <div class="card">
+
+                <p style="color:#64748b;">
+                    Training Completed
+                </p>
+
+                <h2 id="trainingCompleted">
+                    0
+                </h2>
+
+                <p style="color:#64748b;">
+                    Completed training
+                </p>
+
+            </div>
+
+
+
+            <div class="card">
+
+                <p style="color:#64748b;">
+                    Certified
+                </p>
+
+                <h2 id="certified">
+                    0
+                </h2>
+
+                <p style="color:#64748b;">
+                    Candidates certified
+                </p>
+
+            </div>
+
+
+
+            <div class="card">
+
+                <p style="color:#64748b;">
+                    Employed After Training
+                </p>
+
+                <h2 id="employedAfterTraining">
+                    0
+                </h2>
+
+                <p style="color:#64748b;">
+                    Post-training employment
+                </p>
+
+            </div>
+
+
+        </div>
+
+
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-bottom:30px;">
+            <div class="card"><p style="color:#64748b;">Candidates Assessed</p><h2 id="candidatesAssessed">0</h2><p style="color:#64748b;">Submitted assessments</p></div>
+            <div class="card"><p style="color:#64748b;">Average Assessment</p><h2 id="averageAssessment">0%</h2><p style="color:#64748b;">Readiness score</p></div>
+            <div class="card"><p style="color:#64748b;">High Skill-Gap Candidates</p><h2 id="highSkillGap">0</h2><p style="color:#64748b;">Below 50% readiness</p></div>
+            <div class="card"><p style="color:#64748b;">AI Assistant Usage</p><h2 id="aiUsage">0</h2><p style="color:#64748b;">Learner questions</p></div>
+        </div>
+
+
+
+        <!-- ========================= -->
+        <!-- CHARTS -->
+        <!-- ========================= -->
+
+        <div style="
+            display:grid;
+            grid-template-columns:1fr 1fr;
+            gap:25px;
+            margin-bottom:30px;
+        ">
+
+
+            <div class="card">
+
+                <h2 style="margin-bottom:20px;">
+                    Employment Overview
+                </h2>
+
+                <canvas id="employmentChart"></canvas>
+
+            </div>
+
+
+
+            <div class="card">
+
+                <h2 style="margin-bottom:20px;">
+                    Training Outcomes
+                </h2>
+
+                <canvas id="trainingChart"></canvas>
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- ========================= -->
+        <!-- SKILLING IMPACT -->
+        <!-- ========================= -->
+
+        <div class="card"
+             style="margin-bottom:30px;">
+
+
+            <h2 style="margin-bottom:25px;">
+                Skilling Impact
+            </h2>
+
+
+
+            <p style="
+                margin-bottom:8px;
+                font-weight:600;
+            ">
+                Training Completion
+            </p>
+
+
+            <div style="
+                width:100%;
+                height:14px;
+                background:#e2e8f0;
+                border-radius:20px;
+                overflow:hidden;
+                margin-bottom:25px;
+            ">
+
+
+                <div id="completionBar"
+                     style="
+                        height:100%;
+                        width:0%;
+                        background:#2563eb;
+                        border-radius:20px;
+                        transition:width 0.6s;
+                     ">
+                </div>
+
+
+            </div>
+
+
+
+            <p style="
+                margin-bottom:8px;
+                font-weight:600;
+            ">
+                Employment After Training
+            </p>
+
+
+            <div style="
+                width:100%;
+                height:14px;
+                background:#e2e8f0;
+                border-radius:20px;
+                overflow:hidden;
+            ">
+
+
+                <div id="employmentBar"
+                     style="
+                        height:100%;
+                        width:0%;
+                        background:#16a34a;
+                        border-radius:20px;
+                        transition:width 0.6s;
+                     ">
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- ========================= -->
+        <!-- PLATFORM INTELLIGENCE -->
+        <!-- ========================= -->
+
+        <div class="card"
+             style="margin-bottom:30px;">
+
+
+            <h2 style="margin-bottom:12px;">
+                🧠 Platform Intelligence
+            </h2>
+
+
+            <p style="
+                color:#64748b;
+                margin-bottom:25px;
+            ">
+                Automatically generated insights from
+                candidate and training data.
+            </p>
+
+
+
+            <div style="
+                display:grid;
+                grid-template-columns:repeat(3,1fr);
+                gap:20px;
+            ">
+
+
+                <div style="
+                    padding:20px;
+                    background:#eff6ff;
+                    border:1px solid #bfdbfe;
+                    border-radius:12px;
+                ">
+
+                    <h3>
+                        Candidate Pipeline
+                    </h3>
+
+                    <p id="candidateInsight"
+                       style="
+                        color:#475569;
+                        margin-top:10px;
+                    ">
+                        Loading insight...
+                    </p>
+
+                </div>
+
+
+
+                <div style="
+                    padding:20px;
+                    background:#f0fdf4;
+                    border:1px solid #bbf7d0;
+                    border-radius:12px;
+                ">
+
+                    <h3>
+                        Training Impact
+                    </h3>
+
+                    <p id="trainingInsight"
+                       style="
+                        color:#475569;
+                        margin-top:10px;
+                    ">
+                        Loading insight...
+                    </p>
+
+                </div>
+
+
+
+                <div style="
+                    padding:20px;
+                    background:#fefce8;
+                    border:1px solid #fde68a;
+                    border-radius:12px;
+                ">
+
+                    <h3>
+                        Policy Insight
+                    </h3>
+
+                    <p id="policyInsight"
+                       style="
+                        color:#475569;
+                        margin-top:10px;
+                    ">
+                        Loading insight...
+                    </p>
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- ========================= -->
+        <!-- SYSTEM FLOW -->
+        <!-- ========================= -->
+
+        <div class="card">
+
+
+            <h2 style="margin-bottom:25px;">
+                Skill-to-Employment Intelligence Flow
+            </h2>
+
+
+
+            <div style="
+                display:grid;
+                grid-template-columns:repeat(5,1fr);
+                gap:12px;
+                text-align:center;
+            ">
+
+
+                <div style="
+                    padding:20px 10px;
+                    background:#f8fafc;
+                    border:1px solid #e2e8f0;
+                    border-radius:12px;
+                ">
+
+                    <div style="font-size:28px;">
+                        👤
+                    </div>
+
+                    <strong>
+                        Candidate
+                    </strong>
+
+                </div>
+
+
+
+                <div style="
+                    padding:20px 10px;
+                    background:#f8fafc;
+                    border:1px solid #e2e8f0;
+                    border-radius:12px;
+                ">
+
+                    <div style="font-size:28px;">
+                        🎓
+                    </div>
+
+                    <strong>
+                        Training
+                    </strong>
+
+                </div>
+
+
+
+                <div style="
+                    padding:20px 10px;
+                    background:#f8fafc;
+                    border:1px solid #e2e8f0;
+                    border-radius:12px;
+                ">
+
+                    <div style="font-size:28px;">
+                        🧠
+                    </div>
+
+                    <strong>
+                        Skill Analysis
+                    </strong>
+
+                </div>
+
+
+
+                <div style="
+                    padding:20px 10px;
+                    background:#f8fafc;
+                    border:1px solid #e2e8f0;
+                    border-radius:12px;
+                ">
+
+                    <div style="font-size:28px;">
+                        💼
+                    </div>
+
+                    <strong>
+                        Employment
+                    </strong>
+
+                </div>
+
+
+
+                <div style="
+                    padding:20px 10px;
+                    background:#f8fafc;
+                    border:1px solid #e2e8f0;
+                    border-radius:12px;
+                ">
+
+                    <div style="font-size:28px;">
+                        📊
+                    </div>
+
+                    <strong>
+                        Impact
+                    </strong>
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- ERROR -->
+
+        <div id="error"
+             style="
+                display:none;
+                margin-top:20px;
+                padding:18px;
+                background:#fef2f2;
+                color:#b91c1c;
+                border:1px solid #fecaca;
+                border-radius:10px;
+             ">
+        </div>
+
+
+    </div>
+
+    <div id="learnerRecommendations" class="card" style="display:none; margin-top:24px;">
+        <h2>Recommended for You</h2>
+        <div id="recommendationContent" style="margin-top:12px;"></div>
+    </div>
+
+</section>
+
+
+
+<script>
+
+
+let employmentChart = null;
+
+let trainingChart = null;
+
+
+
+async function loadDashboard() {
+
+
+    try {
+
+
+        /* ========================= */
+        /* GET DASHBOARD DATA */
+        /* ========================= */
+
+
+        const dashboardResponse =
+            await fetch("/api/dashboard");
+
+
+        if (!dashboardResponse.ok) {
+
+            throw new Error(
+                "Dashboard API failed"
+            );
+
+        }
+
+
+        const dashboard =
+            await dashboardResponse.json();
+
+
+        console.log(
+            "Dashboard data:",
+            dashboard
+        );
+
+
+
+        /* ========================= */
+        /* GET TRAINING DATA */
+        /* ========================= */
+
+
+        const trainingResponse =
+            await fetch("/api/training-stats");
+
+
+        if (!trainingResponse.ok) {
+
+            throw new Error(
+                "Training API failed"
+            );
+
+        }
+
+
+        const training =
+            await trainingResponse.json();
+
+
+        console.log(
+            "Training data:",
+            training
+        );
+
+
+
+        /* ========================= */
+        /* CANDIDATE NUMBERS */
+        /* ========================= */
+
+
+        document.getElementById(
+            "totalCandidates"
+        ).innerText =
+            Number(
+                dashboard.total_candidates || 0
+            );
+
+
+        document.getElementById(
+            "employedCandidates"
+        ).innerText =
+            Number(
+                dashboard.employed || 0
+            );
+
+
+        document.getElementById(
+            "unemployedCandidates"
+        ).innerText =
+            Number(
+                dashboard.unemployed || 0
+            );
+
+
+        document.getElementById(
+            "employmentRate"
+        ).innerText =
+            Number(
+                dashboard.employment_rate || 0
+            ) + "%";
+
+        document.getElementById("candidatesAssessed").innerText = Number(dashboard.candidates_assessed || 0);
+        document.getElementById("averageAssessment").innerText = Number(dashboard.average_assessment_score || 0) + "%";
+        document.getElementById("highSkillGap").innerText = Number(dashboard.high_skill_gap_candidates || 0);
+        document.getElementById("aiUsage").innerText = Number(dashboard.ai_assistant_usage || 0);
+
+
+
+        /* ========================= */
+        /* TRAINING NUMBERS */
+        /* ========================= */
+
+
+        document.getElementById(
+            "trainingEnrolled"
+        ).innerText =
+            Number(
+                training.enrolled || 0
+            );
+
+
+        document.getElementById(
+            "trainingCompleted"
+        ).innerText =
+            Number(
+                training.completed || 0
+            );
+
+
+        document.getElementById(
+            "certified"
+        ).innerText =
+            Number(
+                training.certified || 0
+            );
+
+
+        document.getElementById(
+            "employedAfterTraining"
+        ).innerText =
+            Number(
+                training.employed || 0
+            );
+
+
+
+        /* ========================= */
+        /* PROGRESS BARS */
+        /* ========================= */
+
+
+        const completionRate =
+            Number(
+                training.completion_rate || 0
+            );
+
+
+        const trainingEmploymentRate =
+            Number(
+                training.employment_rate || 0
+            );
+
+
+        document.getElementById(
+            "completionBar"
+        ).style.width =
+            Math.min(
+                completionRate,
+                100
+            ) + "%";
+
+
+        document.getElementById(
+            "employmentBar"
+        ).style.width =
+            Math.min(
+                trainingEmploymentRate,
+                100
+            ) + "%";
+
+
+
+        /* ========================= */
+        /* EMPLOYMENT CHART */
+        /* ========================= */
+
+
+        const employmentCanvas =
+            document.getElementById(
+                "employmentChart"
+            );
+
+
+        if (employmentChart) {
+
+            employmentChart.destroy();
+
+        }
+
+
+        employmentChart =
+            new Chart(
+                employmentCanvas,
+                {
+
+                    type: "doughnut",
+
+                    data: {
+
+                        labels: [
+                            "Employed",
+                            "Unemployed"
+                        ],
+
+                        datasets: [{
+
+                            data: [
+
+                                Number(
+                                    dashboard.employed || 0
+                                ),
+
+                                Number(
+                                    dashboard.unemployed || 0
+                                )
+
+                            ]
+
+                        }]
+
+                    },
+
+                    options: {
+
+                        responsive: true,
+
+                        plugins: {
+
+                            legend: {
+
+                                position: "bottom"
+
+                            }
+
+                        }
+
+                    }
+
+                }
+            );
+
+
+
+        /* ========================= */
+        /* TRAINING CHART */
+        /* ========================= */
+
+
+        const trainingCanvas =
+            document.getElementById(
+                "trainingChart"
+            );
+
+
+        if (trainingChart) {
+
+            trainingChart.destroy();
+
+        }
+
+
+        trainingChart =
+            new Chart(
+                trainingCanvas,
+                {
+
+                    type: "bar",
+
+                    data: {
+
+                        labels: [
+
+                            "Enrolled",
+                            "Completed",
+                            "Certified",
+                            "Employed"
+
+                        ],
+
+                        datasets: [{
+
+                            label:
+                                "Candidates",
+
+                            data: [
+
+                                Number(
+                                    training.enrolled || 0
+                                ),
+
+                                Number(
+                                    training.completed || 0
+                                ),
+
+                                Number(
+                                    training.certified || 0
+                                ),
+
+                                Number(
+                                    training.employed || 0
+                                )
+
+                            ]
+
+                        }]
+
+                    },
+
+                    options: {
+
+                        responsive: true,
+
+                        scales: {
+
+                            y: {
+
+                                beginAtZero: true,
+
+                                ticks: {
+
+                                    precision: 0
+
+                                }
+
+                            }
+
+                        },
+
+                        plugins: {
+
+                            legend: {
+
+                                display: false
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            );
+
+
+
+        /* ========================= */
+        /* CANDIDATE INSIGHT */
+        /* ========================= */
+
+
+        const totalCandidates =
+            Number(
+                dashboard.total_candidates || 0
+            );
+
+
+        const employed =
+            Number(
+                dashboard.employed || 0
+            );
+
+
+        const unemployed =
+            Number(
+                dashboard.unemployed || 0
+            );
+
+
+        if (totalCandidates === 0) {
+
+            document.getElementById(
+                "candidateInsight"
+            ).innerText =
+                "No candidate data available yet.";
+
+        }
+
+        else {
+
+            document.getElementById(
+                "candidateInsight"
+            ).innerText =
+                totalCandidates +
+                " candidates are currently tracked. " +
+                employed +
+                " are employed, while " +
+                unemployed +
+                " require employment support.";
+
+        }
+
+
+
+        /* ========================= */
+        /* TRAINING INSIGHT */
+        /* ========================= */
+
+
+        const enrolled =
+            Number(
+                training.enrolled || 0
+            );
+
+
+        const completed =
+            Number(
+                training.completed || 0
+            );
+
+
+        const certified =
+            Number(
+                training.certified || 0
+            );
+
+
+        const trainedEmployed =
+            Number(
+                training.employed || 0
+            );
+
+
+        if (enrolled === 0) {
+
+            document.getElementById(
+                "trainingInsight"
+            ).innerText =
+                "No training program data has been added yet.";
+
+        }
+
+        else {
+
+            document.getElementById(
+                "trainingInsight"
+            ).innerText =
+                completed +
+                " candidates completed training, " +
+                certified +
+                " received certification, and " +
+                trainedEmployed +
+                " gained employment after training.";
+
+        }
+
+
+
+        /* ========================= */
+        /* POLICY INSIGHT */
+        /* ========================= */
+
+
+        const employmentRate =
+            Number(
+                dashboard.employment_rate || 0
+            );
+
+
+        if (totalCandidates === 0) {
+
+            document.getElementById(
+                "policyInsight"
+            ).innerText =
+                "More candidate data is required to generate meaningful policy insights.";
+
+        }
+
+        else if (employmentRate >= 70) {
+
+            document.getElementById(
+                "policyInsight"
+            ).innerText =
+                "Employment outcomes are strong. Focus can shift toward improving skill quality and long-term career retention.";
+
+        }
+
+        else if (employmentRate >= 40) {
+
+            document.getElementById(
+                "policyInsight"
+            ).innerText =
+                "Employment outcomes show moderate performance. Targeted skill-gap interventions and employer matching can improve results.";
+
+        }
+
+        else {
+
+            document.getElementById(
+                "policyInsight"
+            ).innerText =
+                "Employment outcomes need improvement. Priority should be given to targeted training, skill-gap reduction and job matching.";
+
+        }
+
+
+
+    }
+
+    catch(error) {
+
+
+        console.error(
+            "Dashboard error:",
+            error
+        );
+
+
+        const errorBox =
+            document.getElementById(
+                "error"
+            );
+
+
+        errorBox.style.display =
+            "block";
+
+
+        errorBox.innerText =
+            "Unable to load dashboard data. Check the browser console for details.";
+
+    }
+
+}
+
+
+
+loadDashboard();
+
+async function loadLearnerRecommendations() {
+    const candidateId = localStorage.getItem('skilltrack_candidate_id');
+    if (!candidateId) return;
+    const response = await fetch(`/api/counselling/notes?candidate_id=${candidateId}`);
+    if (!response.ok) return;
+    const notes = await response.json();
+    if (!notes.length) return;
+    document.getElementById('learnerRecommendations').style.display = 'block';
+    document.getElementById('recommendationContent').innerHTML = notes.map(note => `
+        <div style="padding:12px 0;border-bottom:1px solid #e2e8f0;">
+            <strong>Next steps:</strong> ${note.next_steps || note.session_summary}<br>
+            <strong>Skills:</strong> ${note.recommended_skills || '-'}<br>
+            <strong>Courses:</strong> ${note.recommended_courses || '-'}<br>
+            <strong>Jobs:</strong> ${note.recommended_jobs || '-'}
+        </div>`).join('');
+}
+
+loadLearnerRecommendations();
+
+
+</script>
+
+<a href="/chatbot" aria-label="Ask SkillTrack AI" style="position:fixed;right:24px;bottom:24px;z-index:20;padding:14px 18px;border-radius:999px;background:#1d4ed8;color:#fff;text-decoration:none;font-weight:700;box-shadow:0 12px 25px rgba(29,78,216,.28);">Ask SkillTrack AI</a>
+
+
+</body>
+
+</html>

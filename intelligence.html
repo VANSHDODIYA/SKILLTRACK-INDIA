@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>AI Skill Intelligence - SkillTrack India</title>
+
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+<nav class="navbar">
+
+<div class="logo">
+    SkillTrack India
+</div>
+
+
+<div class="nav-links">
+
+    <a href="/">Home</a>
+
+    <a href="/candidate">
+        Register Candidate
+    </a>
+
+    <a href="/candidates">
+        Candidates
+    </a>
+
+    <a href="/skill-gap">
+        Skill Gaps
+    </a>
+
+    <a href="/intelligence">
+        AI Intelligence
+    </a>
+
+    <a href="/dashboard">
+        Dashboard
+    </a>
+
+</div>
+
+</nav>
+
+<section style=" padding:55px 7%; ">
+
+<div style="
+    max-width:1200px;
+    margin:auto;
+">
+
+
+    <h1 style="
+        font-size:42px;
+        margin-bottom:8px;
+    ">
+        AI Skill Intelligence
+    </h1>
+
+
+    <p style="
+        color:#64748b;
+        font-size:17px;
+        margin-bottom:35px;
+    ">
+        Analyze candidate readiness, identify priority skill gaps
+        and generate personalized learning pathways.
+    </p>
+
+
+    <div class="card"
+         style="margin-bottom:25px;">
+
+
+        <h2 style="margin-bottom:18px;">
+            Select Candidate
+        </h2>
+
+
+        <select id="candidateSelect"
+                style="
+                    width:100%;
+                    padding:14px;
+                    border:1px solid #e2e8f0;
+                    border-radius:9px;
+                    font-size:15px;
+                ">
+
+            <option value="">
+                Loading candidates...
+            </option>
+
+        </select>
+
+
+    </div>
+
+
+    <div id="results"
+         style="display:none;">
+
+
+        <div style="
+            display:grid;
+            grid-template-columns:
+                repeat(3,1fr);
+            gap:20px;
+            margin-bottom:25px;
+        ">
+
+
+            <div class="card">
+
+                <p style="color:#64748b;">
+                    Overall Readiness
+                </p>
+
+                <h1 id="readiness">
+                    0%
+                </h1>
+
+                <p style="
+                    color:#64748b;
+                    margin-top:5px;
+                ">
+                    Industry readiness score
+                </p>
+
+            </div>
+
+
+            <div class="card">
+
+                <p style="color:#64748b;">
+                    Priority Skill
+                </p>
+
+                <h2 id="prioritySkill">
+                    -
+                </h2>
+
+                <p style="
+                    color:#64748b;
+                    margin-top:5px;
+                ">
+                    Highest development priority
+                </p>
+
+            </div>
+
+
+            <div class="card">
+
+                <p style="color:#64748b;">
+                    Skill Gap
+                </p>
+
+                <h1 id="priorityGap">
+                    0
+                </h1>
+
+                <p style="
+                    color:#64748b;
+                    margin-top:5px;
+                ">
+                    Demand vs proficiency gap
+                </p>
+
+            </div>
+
+
+        </div>
+
+
+        <div class="card"
+             style="margin-bottom:25px;">
+
+
+            <h2 style="margin-bottom:12px;">
+                AI Recommendation
+            </h2>
+
+
+            <div style="
+                padding:18px;
+                background:#eff6ff;
+                border:1px solid #bfdbfe;
+                border-radius:10px;
+            ">
+
+                <p id="message"
+                   style="
+                    color:#1e3a8a;
+                    font-size:16px;
+                    line-height:1.7;
+                   ">
+                </p>
+
+            </div>
+
+
+        </div>
+
+
+        <div class="card"
+             style="margin-bottom:25px;">
+
+
+            <h2 style="margin-bottom:20px;">
+                Candidate Skill Profile
+            </h2>
+
+
+            <div style="
+                overflow-x:auto;
+            ">
+
+
+                <table style="
+                    width:100%;
+                    border-collapse:collapse;
+                ">
+
+
+                    <thead>
+
+                        <tr>
+
+                            <th style="
+                                padding:13px;
+                                text-align:left;
+                            ">
+                                Skill
+                            </th>
+
+
+                            <th style="
+                                padding:13px;
+                                text-align:left;
+                            ">
+                                Industry Demand
+                            </th>
+
+
+                            <th style="
+                                padding:13px;
+                                text-align:left;
+                            ">
+                                Proficiency
+                            </th>
+
+
+                            <th style="
+                                padding:13px;
+                                text-align:left;
+                            ">
+                                Level
+                            </th>
+
+
+                            <th style="
+                                padding:13px;
+                                text-align:left;
+                            ">
+                                Status
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="skillTable">
+                    </tbody>
+
+
+                </table>
+
+
+            </div>
+
+
+        </div>
+
+
+        <div class="card">
+
+
+            <h2 style="margin-bottom:10px;">
+                Personalized Learning Path
+            </h2>
+
+
+            <p style="
+                color:#64748b;
+                margin-bottom:25px;
+            ">
+                Recommended steps for improving the
+                candidate's highest-priority skill.
+            </p>
+
+
+            <div id="learningPath">
+            </div>
+
+
+        </div>
+
+
+        <div class="card" style="margin-top:24px;">
+            <h2 style="margin-bottom:10px;">Continue Your Journey</h2>
+            <p style="color:#64748b;margin-bottom:18px;">Use this analysis to choose your next practical step.</p>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                <a href="/skill-gap" class="btn">Review Skill Gaps</a>
+                <a href="/jobs" class="btn">Find Job Matches</a>
+                <a href="/assessments" class="btn">Retake Assessment</a>
+                <a href="/counselling" class="btn">Book Expert Counselling</a>
+            </div>
+        </div>
+
+
+    </div>
+
+
+    <div id="loading"
+         style="
+            display:none;
+            text-align:center;
+            padding:30px;
+            color:#64748b;
+         ">
+
+        Analyzing candidate skills...
+
+    </div>
+
+
+    <div id="error"
+         style="
+            display:none;
+            padding:18px;
+            background:#fef2f2;
+            border:1px solid #fecaca;
+            color:#b91c1c;
+            border-radius:10px;
+            margin-top:20px;
+         ">
+    </div>
+
+
+</div>
+
+</section>
+
+<script> let candidates = []; async function loadCandidates() { try { const response = await fetch("/api/candidates"); candidates = await response.json(); const select = document.getElementById( "candidateSelect" ); select.innerHTML = '<option value="">Select a candidate</option>'; candidates.forEach( function(candidate) { const option = document.createElement( "option" ); option.value = candidate.id; option.textContent = candidate.name; select.appendChild( option ); } ); } catch(error) { console.error(error); document.getElementById( "candidateSelect" ).innerHTML = '<option value="">Unable to load candidates</option>'; } } document.getElementById( "candidateSelect" ).addEventListener( "change", function() { const candidateId = this.value; if (!candidateId) { document.getElementById( "results" ).style.display = "none"; return; } analyzeCandidate( candidateId ); } ); async function analyzeCandidate( candidateId ) { const loading = document.getElementById( "loading" ); const results = document.getElementById( "results" ); const error = document.getElementById( "error" ); loading.style.display = "block"; results.style.display = "none"; error.style.display = "none"; try { const response = await fetch( "/api/intelligence/" + candidateId ); const data = await response.json(); if (!response.ok) { throw new Error( data.error || "Unable to analyze candidate." ); } document.getElementById( "readiness" ).innerText = data.overall_readiness + "%"; document.getElementById( "prioritySkill" ).innerText = data.priority_skill; document.getElementById( "priorityGap" ).innerText = data.priority_gap; document.getElementById( "message" ).innerText = data.message; const table = document.getElementById( "skillTable" ); table.innerHTML = ""; data.skill_profile.forEach( function(skill) { const row = document.createElement( "tr" ); let statusText = skill.status; if ( skill.status === "Matched" ) { statusText = "✓ Matched"; } else { statusText = "! Missing"; } row.innerHTML = ` <td style="padding:13px;"> ${skill.skill} </td> <td style="padding:13px;"> ${skill.demand}% </td> <td style="padding:13px;"> ${skill.proficiency}% </td> <td style="padding:13px;"> ${skill.level} </td> <td style=" padding:13px; font-weight:600; "> ${statusText} </td> `; table.appendChild( row ); } ); const learningPath = document.getElementById( "learningPath" ); learningPath.innerHTML = ""; data.learning_path.forEach( function(step, index) { const item = document.createElement( "div" ); item.innerHTML = ` <div style=" display:flex; align-items:center; gap:15px; padding:15px; margin-bottom:12px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; "> <div style=" min-width:36px; height:36px; border-radius:50%; background:#2563eb; color:white; display:flex; align-items:center; justify-content:center; font-weight:700; "> ${index + 1} </div> <strong> ${step} </strong> </div> `; learningPath.appendChild( item ); } ); results.style.display = "block"; } catch(err) { console.error(err); error.style.display = "block"; error.innerText = err.message || "Unable to load AI intelligence."; } loading.style.display = "none"; } loadCandidates(); </script>
+
+</body>
+
+</html>

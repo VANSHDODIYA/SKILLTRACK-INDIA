@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Employment Tracking - SkillTrack India</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+    <style>
+
+        .employment-page {
+            padding: 50px 7%;
+        }
+
+        .page-heading {
+            margin-bottom: 35px;
+        }
+
+        .page-heading h1 {
+            font-size: 38px;
+            margin-bottom: 10px;
+        }
+
+        .page-heading p {
+            color: #64748b;
+            font-size: 17px;
+        }
+
+        .employment-card {
+            background: white;
+            padding: 35px;
+            border-radius: 14px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.07);
+            max-width: 900px;
+            margin-bottom: 35px;
+        }
+
+        .employment-card h2 {
+            margin-bottom: 25px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.full {
+            grid-column: span 2;
+        }
+
+        label {
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        input,
+        select,
+        textarea {
+
+            padding: 12px;
+
+            border: 1px solid #cbd5e1;
+
+            border-radius: 8px;
+
+            font-size: 15px;
+
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .save-button {
+
+            margin-top: 25px;
+
+            padding: 14px 30px;
+
+            background: #2563eb;
+
+            color: white;
+
+            border: none;
+
+            border-radius: 8px;
+
+            font-size: 16px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+        }
+
+        .save-button:hover {
+            background: #1d4ed8;
+        }
+
+        .message {
+
+            margin-top: 20px;
+
+            font-weight: bold;
+
+        }
+
+        .outcomes {
+
+            background: white;
+
+            padding: 30px;
+
+            border-radius: 14px;
+
+            box-shadow: 0 5px 20px rgba(0,0,0,0.07);
+
+            overflow-x: auto;
+
+        }
+
+        .outcomes h2 {
+            margin-bottom: 20px;
+        }
+
+        table {
+
+            width: 100%;
+
+            border-collapse: collapse;
+
+            min-width: 900px;
+
+        }
+
+        th,
+        td {
+
+            padding: 14px;
+
+            text-align: left;
+
+            border-bottom: 1px solid #e2e8f0;
+
+        }
+
+        th {
+
+            background: #f8fafc;
+
+        }
+
+        .status {
+
+            padding: 6px 10px;
+
+            border-radius: 20px;
+
+            font-size: 13px;
+
+            font-weight: bold;
+
+        }
+
+        .employed {
+
+            background: #dcfce7;
+
+            color: #166534;
+
+        }
+
+        .unemployed {
+
+            background: #fee2e2;
+
+            color: #991b1b;
+
+        }
+
+        @media(max-width: 800px) {
+
+            .form-grid {
+
+                grid-template-columns: 1fr;
+
+            }
+
+            .form-group.full {
+
+                grid-column: span 1;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<nav class="navbar">
+
+    <div class="logo">
+        SkillTrack India
+    </div>
+
+    <div class="nav-links">
+
+        <a href="/">Home</a>
+
+        <a href="/dashboard">Dashboard</a>
+
+        <a href="/skill-gap">Skill Gaps</a>
+
+        <a href="/candidate">Register</a>
+
+        <a href="/candidates">Candidates</a>
+
+        <a href="/employment">Employment</a>
+
+    </div>
+
+</nav>
+
+
+<main class="employment-page">
+
+
+    <div class="page-heading">
+
+        <h1>Employment Outcome Tracking</h1>
+
+        <p>
+            Track candidate employment outcomes after
+            training and measure real-world skilling impact.
+        </p>
+
+    </div>
+
+
+    <div class="employment-card">
+
+        <h2>Record Employment Outcome</h2>
+
+
+        <div class="form-grid">
+
+
+            <div class="form-group">
+
+                <label>Candidate ID</label>
+
+                <input
+                    type="number"
+                    id="candidateId"
+                    placeholder="Example: 1"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Employment Status</label>
+
+                <select id="employmentStatus">
+
+                    <option value="Employed">
+                        Employed
+                    </option>
+
+                    <option value="Unemployed">
+                        Unemployed
+                    </option>
+
+                    <option value="Self-Employed">
+                        Self-Employed
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Company / Organization</label>
+
+                <input
+                    type="text"
+                    id="company"
+                    placeholder="Example: TCS"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Industry</label>
+
+                <input
+                    type="text"
+                    id="industry"
+                    placeholder="Example: Information Technology"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Job Role</label>
+
+                <input
+                    type="text"
+                    id="jobRole"
+                    placeholder="Example: Software Developer"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Salary Range</label>
+
+                <select id="salary">
+
+                    <option value="Below ₹2 LPA">
+                        Below ₹2 LPA
+                    </option>
+
+                    <option value="₹2 - ₹4 LPA">
+                        ₹2 - ₹4 LPA
+                    </option>
+
+                    <option value="₹4 - ₹6 LPA">
+                        ₹4 - ₹6 LPA
+                    </option>
+
+                    <option value="₹6 - ₹10 LPA">
+                        ₹6 - ₹10 LPA
+                    </option>
+
+                    <option value="Above ₹10 LPA">
+                        Above ₹10 LPA
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Placement Date</label>
+
+                <input
+                    type="date"
+                    id="placementDate"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Employment After Training</label>
+
+                <select id="employmentAfterTraining">
+
+                    <option value="Yes">
+                        Yes
+                    </option>
+
+                    <option value="No">
+                        No
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group full">
+
+                <label>Career Progression</label>
+
+                <textarea
+                    id="careerProgression"
+                    placeholder="Example: Promoted to Senior Developer after 1 year."
+                ></textarea>
+
+            </div>
+
+
+        </div>
+
+
+        <button
+            class="save-button"
+            onclick="saveEmployment()"
+        >
+
+            Save Employment Outcome
+
+        </button>
+
+
+        <div
+            class="message"
+            id="message"
+        ></div>
+
+
+    </div>
+
+
+    <div class="outcomes">
+
+        <h2>Employment Outcomes</h2>
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>ID</th>
+
+                    <th>Candidate</th>
+
+                    <th>Status</th>
+
+                    <th>Company</th>
+
+                    <th>Industry</th>
+
+                    <th>Job Role</th>
+
+                    <th>Salary</th>
+
+                    <th>Placement Date</th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody id="outcomeTable">
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+</main>
+
+
+<script>
+
+
+async function saveEmployment() {
+
+
+    const candidateId =
+        document.getElementById("candidateId").value;
+
+
+    const employmentStatus =
+        document.getElementById("employmentStatus").value;
+
+
+    const company =
+        document.getElementById("company").value;
+
+
+    const industry =
+        document.getElementById("industry").value;
+
+
+    const jobRole =
+        document.getElementById("jobRole").value;
+
+
+    const salary =
+        document.getElementById("salary").value;
+
+
+    const placementDate =
+        document.getElementById("placementDate").value;
+
+
+    const employmentAfterTraining =
+        document.getElementById(
+            "employmentAfterTraining"
+        ).value;
+
+
+    const careerProgression =
+        document.getElementById(
+            "careerProgression"
+        ).value;
+
+
+    if (!candidateId) {
+
+        document.getElementById("message").innerText =
+            "Please enter Candidate ID.";
+
+        return;
+
+    }
+
+
+    try {
+
+
+        const response = await fetch(
+            "/api/employment",
+            {
+
+                method: "POST",
+
+                headers: {
+
+                    "Content-Type":
+                        "application/json"
+
+                },
+
+                body: JSON.stringify({
+
+                    candidate_id: candidateId,
+
+                    employment_status:
+                        employmentStatus,
+
+                    company: company,
+
+                    industry: industry,
+
+                    job_role: jobRole,
+
+                    salary_range: salary,
+
+                    placement_date:
+                        placementDate,
+
+                    employment_after_training:
+                        employmentAfterTraining,
+
+                    career_progression:
+                        careerProgression
+
+                })
+
+            }
+        );
+
+
+        const result =
+            await response.json();
+
+
+        document.getElementById("message").innerText =
+            result.message;
+
+
+    if (response.ok && result.success) {
+
+            loadEmployment();
+
+        }
+
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+        document.getElementById("message").innerText =
+            "Unable to save employment outcome.";
+
+    }
+
+}
+
+
+async function loadEmployment() {
+
+
+    try {
+
+
+        const response =
+            await fetch("/api/employment");
+
+
+        const data =
+            await response.json();
+
+
+        const table =
+            document.getElementById(
+                "outcomeTable"
+            );
+
+
+        table.innerHTML = "";
+
+
+        data.forEach(outcome => {
+
+
+            const row =
+                document.createElement("tr");
+
+
+            let statusClass = "";
+
+
+            if (
+                outcome.employment_status
+                === "Employed"
+            ) {
+
+                statusClass = "employed";
+
+            }
+
+            else {
+
+                statusClass = "unemployed";
+
+            }
+
+
+            row.innerHTML = `
+
+                <td>${outcome.id}</td>
+
+                <td>
+                    ${outcome.candidate_name}
+                </td>
+
+                <td>
+                    <span class="status ${statusClass}">
+                        ${outcome.employment_status}
+                    </span>
+                </td>
+
+                <td>
+                    ${outcome.company || "-"}
+                </td>
+
+                <td>
+                    ${outcome.industry || "-"}
+                </td>
+
+                <td>
+                    ${outcome.job_role || "-"}
+                </td>
+
+                <td>
+                    ${outcome.salary || "-"}
+                </td>
+
+                <td>
+                    ${outcome.placement_date || "-"}
+                </td>
+
+            `;
+
+
+            table.appendChild(row);
+
+
+        });
+
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+    }
+
+}
+
+
+loadEmployment();
+
+
+</script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI Career Chatbot | SkillTrack India</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        body { background: #f5f7fb; }
+        .page { padding: 50px 7%; max-width: 1100px; margin: auto; }
+        .card { background: white; border: 1px solid #e2e8f0; border-radius: 18px; box-shadow: 0 12px 32px rgba(15,23,42,0.05); }
+        .chat-shell { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 24px; }
+        .chat-panel { padding: 22px; }
+        .chat-window { height: 420px; overflow-y: auto; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 14px; padding: 18px; display: flex; flex-direction: column; gap: 14px; }
+        .message { max-width: 80%; padding: 12px 14px; border-radius: 14px; line-height: 1.6; }
+        .message.user { align-self: flex-end; background: #2563eb; color: white; border-bottom-right-radius: 4px; }
+        .message.bot { align-self: flex-start; background: white; color: #0f172a; border: 1px solid #e2e8f0; border-bottom-left-radius: 4px; }
+        .composer { display: flex; gap: 12px; margin-top: 18px; }
+        .composer input { flex: 1; border: 1px solid #cbd5e1; border-radius: 10px; padding: 14px 16px; font-size: 15px; }
+        .btn { border: none; border-radius: 10px; padding: 13px 18px; font-weight: 700; cursor: pointer; background: linear-gradient(135deg,#2563eb,#1d4ed8); color:white; }
+        .side-panel { padding: 22px; }
+        .suggestion-list { display: grid; gap: 10px; margin-top: 16px; }
+        .chip { background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; border-radius: 10px; padding: 10px 12px; font-weight: 600; cursor: pointer; }
+        .muted { color: #64748b; }
+        @media(max-width: 900px){ .chat-shell { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+<nav class="navbar">
+    <div class="logo">SkillTrack India</div>
+    <div class="nav-links">
+        <a href="/">Home</a>
+        <a href="/candidate">Register Candidate</a>
+        <a href="/assessments">Assessments</a>
+        <a href="/counselling">Counselling</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/chatbot">AI Chatbot</a>
+    </div>
+</nav>
+
+<section class="page">
+    <div class="card" style="padding:24px 28px; margin-bottom:24px;">
+        <span style="display:inline-block;padding:8px 12px;border-radius:999px;background:#dbeafe;color:#1d4ed8;font-weight:700;">AI Career Guidance</span>
+        <h1 style="font-size:42px; margin-top:16px;">SkillTrack AI Assistant</h1>
+        <p class="muted" style="margin-top:10px;">Ask about career paths, training gaps, or the best next step after your assessment.</p>
+    </div>
+
+    <div class="chat-shell">
+        <div class="card chat-panel">
+            <div class="chat-window" id="chatWindow">
+                <div class="message bot">Hello! I can help you choose a career path, improve skill gaps, and plan your next steps. Ask me about analytics, software, AI, marketing, or career readiness.</div>
+            </div>
+            <div class="composer">
+                <input id="chatInput" type="text" placeholder="Ask about your career path or skill gap..." />
+                <button class="btn" id="sendBtn" type="button">Send</button>
+            </div>
+        </div>
+
+        <div class="card side-panel">
+            <h3>Suggested prompts</h3>
+            <div class="suggestion-list">
+                <div class="chip" data-prompt="I want to become a data analyst">I want to become a data analyst</div>
+                <div class="chip" data-prompt="What should I learn to become a software developer?">What should I learn to become a software developer?</div>
+                <div class="chip" data-prompt="How can I improve my AI and ML career path?">How can I improve my AI and ML career path?</div>
+                <div class="chip" data-prompt="Which skill gap should I fix first?">Which skill gap should I fix first?</div>
+            </div>
+            <div style="margin-top:22px; padding:16px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px;">
+                <strong>Tip</strong>
+                <p class="muted" style="margin-top:8px;">Use your assessment and skill-gap analysis to guide the conversation. The assistant responds with a job-focused action plan.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+const chatWindow = document.getElementById('chatWindow');
+const chatInput = document.getElementById('chatInput');
+const sendBtn = document.getElementById('sendBtn');
+
+function addMessage(text, type) {
+    const message = document.createElement('div');
+    message.className = `message ${type}`;
+    message.textContent = text;
+    chatWindow.appendChild(message);
+    chatWindow.scrollTop = chatWindow.scrollHeight;
+}
+
+async function sendMessage() {
+    const message = chatInput.value.trim();
+    if (!message) return;
+    addMessage(message, 'user');
+    chatInput.value = '';
+    sendBtn.disabled = true;
+    sendBtn.textContent = 'Thinking...';
+
+    try {
+        const response = await fetch('/api/chatbot', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                candidate_id: Number(localStorage.getItem('skilltrack_candidate_id') || 1),
+                target_role: 'Data Analyst',
+                message: message
+            })
+        });
+        const data = await response.json();
+        if (!response.ok) {
+            addMessage(data.error || 'Sorry, I could not answer that question.', 'bot');
+            return;
+        }
+        const fullResponse = `${data.message}\n\nRecommended action: ${data.recommended_action}`;
+        addMessage(fullResponse, 'bot');
+        if (Array.isArray(data.suggestions) && data.suggestions.length) {
+            const suggestionsText = 'Suggested next steps: ' + data.suggestions.join(' • ');
+            addMessage(suggestionsText, 'bot');
+        }
+        if (data.needs_counselling) {
+            const counsellingLink = document.createElement('a');
+            counsellingLink.href = '/counselling';
+            counsellingLink.textContent = 'Book Expert Counselling';
+            counsellingLink.style.cssText = 'display:inline-block;margin-top:8px;padding:10px 12px;border-radius:8px;background:#dbeafe;color:#1d4ed8;font-weight:700;text-decoration:none;';
+            chatWindow.appendChild(counsellingLink);
+        }
+    } catch (error) {
+        addMessage('The assistant is temporarily unavailable. Please try again in a moment.', 'bot');
+    } finally {
+        sendBtn.disabled = false;
+        sendBtn.textContent = 'Send';
+        chatInput.focus();
+    }
+}
+
+sendBtn.addEventListener('click', sendMessage);
+chatInput.addEventListener('keydown', function(event) {
+    if (event.key === 'Enter') {
+        sendMessage();
+    }
+});
+
+document.querySelectorAll('.chip').forEach((chip) => {
+    chip.addEventListener('click', function () {
+        chatInput.value = chip.dataset.prompt;
+        chatInput.focus();
+    });
+});
+</script>
+</body>
+</html>

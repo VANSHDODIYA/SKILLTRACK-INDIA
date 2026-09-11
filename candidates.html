@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>Candidate Management - SkillTrack India</title>
+
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+<nav class="navbar">
+
+<div class="logo">
+    SkillTrack India
+</div>
+
+
+<div class="nav-links">
+
+    <a href="/">Home</a>
+
+    <a href="/candidate">
+        Register Candidate
+    </a>
+
+    <a href="/candidates">
+        Candidates
+    </a>
+
+    <a href="/skill-gap">
+        Skill Gaps
+    </a>
+
+    <a href="/intelligence">
+        AI Intelligence
+    </a>
+
+    <a href="/dashboard">
+        Dashboard
+    </a>
+
+</div>
+
+</nav>
+
+<section style="padding:50px 7%;">
+
+<h1>
+    Candidate Management
+</h1>
+
+
+<p style="
+    color:#64748b;
+    margin-bottom:30px;
+">
+    View all registered candidates.
+</p>
+
+
+<div style="
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:20px;
+    margin-bottom:30px;
+">
+
+
+    <div class="card">
+
+        <h3>
+            Total Candidates
+        </h3>
+
+        <h1 id="total">
+            0
+        </h1>
+
+    </div>
+
+
+    <div class="card">
+
+        <h3>
+            Employed
+        </h3>
+
+        <h1 id="employed">
+            0
+        </h1>
+
+    </div>
+
+
+    <div class="card">
+
+        <h3>
+            Unemployed
+        </h3>
+
+        <h1 id="unemployed">
+            0
+        </h1>
+
+    </div>
+
+
+</div>
+
+
+<div class="card">
+
+
+    <h2 style="margin-bottom:20px;">
+        Registered Candidates
+    </h2>
+
+
+    <div style="overflow-x:auto;">
+
+
+        <table style="
+            width:100%;
+            border-collapse:collapse;
+        ">
+
+
+            <thead>
+
+                <tr>
+
+                    <th style="
+                        padding:12px;
+                        text-align:left;
+                    ">
+                        ID
+                    </th>
+
+
+                    <th style="
+                        padding:12px;
+                        text-align:left;
+                    ">
+                        Name
+                    </th>
+
+
+                    <th style="
+                        padding:12px;
+                        text-align:left;
+                    ">
+                        Email
+                    </th>
+
+
+                    <th style="
+                        padding:12px;
+                        text-align:left;
+                    ">
+                        Qualification
+                    </th>
+
+
+                    <th style="
+                        padding:12px;
+                        text-align:left;
+                    ">
+                        Skills
+                    </th>
+
+
+                    <th style="
+                        padding:12px;
+                        text-align:left;
+                    ">
+                        Employment
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody id="candidateTable">
+
+            </tbody>
+
+
+        </table>
+
+
+    </div>
+
+
+</div>
+
+</section>
+
+<script> async function loadCandidates() { try { const response = await fetch("/api/candidates"); const candidates = await response.json(); document.getElementById("total") .innerText = candidates.length; let employed = 0; let unemployed = 0; candidates.forEach( function(candidate) { const status = String( candidate.employment || "" ) .trim() .toLowerCase(); if (status === "employed") { employed++; } if (status === "unemployed") { unemployed++; } } ); document.getElementById("employed") .innerText = employed; document.getElementById("unemployed") .innerText = unemployed; const table = document.getElementById( "candidateTable" ); table.innerHTML = ""; if (candidates.length === 0) { table.innerHTML = ` <tr> <td colspan="6" style=" padding:30px; text-align:center; " > No candidates registered yet. </td> </tr> `; return; } candidates.forEach( function(candidate) { const row = document.createElement("tr"); row.innerHTML = ` <td style="padding:12px;"> ${candidate.id} </td> <td style="padding:12px;"> ${candidate.name || "-"} </td> <td style="padding:12px;"> ${candidate.email || "-"} </td> <td style="padding:12px;"> ${candidate.qualification || "-"} </td> <td style="padding:12px;"> ${candidate.skills || "-"} </td> <td style="padding:12px;"> ${candidate.employment || "-"} </td> `; table.appendChild(row); } ); } catch(error) { console.error(error); document.getElementById( "candidateTable" ).innerHTML = ` <tr> <td colspan="6" style=" padding:30px; text-align:center; color:red; " > Unable to load candidates. </td> </tr> `; } } loadCandidates(); </script>
+
+</body>
+
+</html>

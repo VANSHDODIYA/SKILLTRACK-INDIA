@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>Skill Gap Analysis - SkillTrack India</title>
+
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+<nav class="navbar">
+
+<div class="logo">
+    SkillTrack India
+</div>
+
+
+<div class="nav-links">
+
+    <a href="/">Home</a>
+
+    <a href="/candidate">
+        Register Candidate
+    </a>
+
+    <a href="/candidates">
+        Candidates
+    </a>
+
+    <a href="/skill-gap">
+        Skill Gaps
+    </a>
+
+    <a href="/intelligence">
+        AI Intelligence
+    </a>
+
+    <a href="/dashboard">
+        Dashboard
+    </a>
+
+</div>
+
+</nav>
+
+<section style=" padding:60px 7%; ">
+
+<div style="
+    max-width:850px;
+    margin:auto;
+">
+
+
+    <h1 style="
+        font-size:42px;
+        margin-bottom:10px;
+    ">
+        Skill Gap Analysis
+    </h1>
+
+
+    <p style="
+        color:#64748b;
+        font-size:17px;
+        margin-bottom:35px;
+    ">
+        Compare candidate skills with industry requirements
+        and identify the most important skill gaps.
+    </p>
+
+
+    <div class="card"
+         style="margin-bottom:25px;">
+
+
+        <h2 style="margin-bottom:20px;">
+            Select Candidate
+        </h2>
+
+
+        <label style="
+            display:block;
+            margin-bottom:8px;
+            font-weight:600;
+        ">
+            Candidate
+        </label>
+
+
+        <select id="candidateSelect"
+                style="
+                    width:100%;
+                    padding:13px;
+                    border:1px solid #e2e8f0;
+                    border-radius:8px;
+                    font-size:15px;
+                ">
+
+            <option value="">
+                Loading candidates...
+            </option>
+
+        </select>
+
+
+        <div id="candidateInfo"
+             style="
+                margin-top:20px;
+                padding:15px;
+                background:#f8fafc;
+                border-radius:10px;
+                display:none;
+             ">
+
+            <p>
+                <strong>Name:</strong>
+                <span id="candidateName"></span>
+            </p>
+
+            <p>
+                <strong>Skills:</strong>
+                <span id="candidateSkills"></span>
+            </p>
+
+        </div>
+
+
+        <button
+            onclick="analyzeSkills()"
+            class="btn"
+            style="
+                border:none;
+                cursor:pointer;
+                margin-top:20px;
+            "
+        >
+            Analyze Skill Gap
+        </button>
+
+
+    </div>
+
+
+    <div id="results"
+         style="display:none;">
+
+
+        <div style="
+            display:grid;
+            grid-template-columns:repeat(3,1fr);
+            gap:20px;
+            margin-bottom:25px;
+        ">
+
+
+            <div class="card">
+
+                <p style="
+                    color:#64748b;
+                    margin-bottom:8px;
+                ">
+                    Skill Match
+                </p>
+
+                <h1 id="matchPercentage">
+                    0%
+                </h1>
+
+            </div>
+
+
+            <div class="card">
+
+                <p style="
+                    color:#64748b;
+                    margin-bottom:8px;
+                ">
+                    Skills Matched
+                </p>
+
+                <h1 id="matchedCount">
+                    0
+                </h1>
+
+            </div>
+
+
+            <div class="card">
+
+                <p style="
+                    color:#64748b;
+                    margin-bottom:8px;
+                ">
+                    Skills Missing
+                </p>
+
+                <h1 id="missingCount">
+                    0
+                </h1>
+
+            </div>
+
+
+        </div>
+
+
+        <div class="card"
+             style="margin-bottom:25px;">
+
+
+            <h2 style="margin-bottom:20px;">
+                Industry Skill Requirements
+            </h2>
+
+
+            <p style="
+                color:#64748b;
+                margin-bottom:20px;
+            ">
+                Current industry requirements used
+                for skill-gap evaluation.
+            </p>
+
+
+            <div id="requiredSkills"
+                 style="
+                    display:flex;
+                    flex-wrap:wrap;
+                    gap:10px;
+                 ">
+            </div>
+
+
+        </div>
+
+
+        <div style="
+            display:grid;
+            grid-template-columns:1fr 1fr;
+            gap:25px;
+        ">
+
+
+            <div class="card">
+
+
+                <h2 style="margin-bottom:20px;">
+                    Matched Skills
+                </h2>
+
+
+                <div id="matchedSkills">
+                </div>
+
+
+            </div>
+
+
+            <div class="card">
+
+
+                <h2 style="margin-bottom:20px;">
+                    Missing Skills
+                </h2>
+
+
+                <div id="missingSkills">
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+        <div class="card"
+             style="margin-top:25px;">
+
+
+            <h2 style="margin-bottom:15px;">
+                Recommended Training
+            </h2>
+
+
+            <p style="
+                color:#64748b;
+                margin-bottom:20px;
+            ">
+                Recommended learning areas based on
+                the identified skill gaps.
+            </p>
+
+
+            <div id="recommendations">
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+</section>
+
+<script> let candidates = []; async function loadCandidates() { try { const response = await fetch("/api/candidates"); candidates = await response.json(); const select = document.getElementById( "candidateSelect" ); select.innerHTML = '<option value="">Select a candidate</option>'; candidates.forEach( function(candidate) { const option = document.createElement("option"); option.value = candidate.id; option.textContent = candidate.name; select.appendChild(option); } ); } catch(error) { console.error(error); document.getElementById( "candidateSelect" ).innerHTML = '<option value="">Unable to load candidates</option>'; } } document.getElementById( "candidateSelect" ).addEventListener( "change", function() { const selectedId = this.value; const candidate = candidates.find( function(c) { return String(c.id) === String(selectedId); } ); const info = document.getElementById( "candidateInfo" ); if (!candidate) { info.style.display = "none"; return; } info.style.display = "block"; document.getElementById( "candidateName" ).innerText = candidate.name; document.getElementById( "candidateSkills" ).innerText = candidate.skills || "No skills added"; } ); async function analyzeSkills() { const selectedId = document.getElementById( "candidateSelect" ).value; if (!selectedId) { alert( "Please select a candidate first." ); return; } const candidate = candidates.find( function(c) { return String(c.id) === String(selectedId); } ); if (!candidate) { return; } const requiredSkills = [ "Python", "JavaScript", "SQL", "Cloud Computing", "AI / ML", "Cybersecurity", "Data Analytics", "Docker / DevOps" ]; const candidateSkills = (candidate.skills || "") .split(",") .map( function(skill) { return skill .trim() .toLowerCase(); } ) .filter( function(skill) { return skill.length > 0; } ); const matched = []; const missing = []; requiredSkills.forEach( function(skill) { const normalized = skill.toLowerCase(); if ( candidateSkills.includes( normalized ) ) { matched.push(skill); } else { missing.push(skill); } } ); const percentage = Math.round( (matched.length / requiredSkills.length) * 100 ); document.getElementById( "results" ).style.display = "block"; document.getElementById( "matchPercentage" ).innerText = percentage + "%"; document.getElementById( "matchedCount" ).innerText = matched.length; document.getElementById( "missingCount" ).innerText = missing.length; const requiredContainer = document.getElementById( "requiredSkills" ); requiredContainer.innerHTML = ""; requiredSkills.forEach( function(skill) { const badge = document.createElement("span"); badge.innerText = skill; badge.style.cssText = ` padding:8px 13px; background:#eff6ff; color:#2563eb; border-radius:20px; font-size:13px; font-weight:600; `; requiredContainer.appendChild( badge ); } ); const matchedContainer = document.getElementById( "matchedSkills" ); matchedContainer.innerHTML = ""; if (matched.length === 0) { matchedContainer.innerHTML = "<p style='color:#64748b;'>No matching skills found.</p>"; } else { matched.forEach( function(skill) { const item = document.createElement("div"); item.innerHTML = ` <div style=" padding:12px; margin-bottom:10px; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:8px; color:#166534; font-weight:600; "> ✓ ${skill} </div> `; matchedContainer.appendChild( item ); } ); } const missingContainer = document.getElementById( "missingSkills" ); missingContainer.innerHTML = ""; if (missing.length === 0) { missingContainer.innerHTML = "<p style='color:#166534;font-weight:600;'>No major skill gaps identified.</p>"; } else { missing.forEach( function(skill) { const item = document.createElement("div"); item.innerHTML = ` <div style=" padding:12px; margin-bottom:10px; background:#fff7ed; border:1px solid #fed7aa; border-radius:8px; color:#c2410c; font-weight:600; "> ! ${skill} </div> `; missingContainer.appendChild( item ); } ); } const recommendations = document.getElementById( "recommendations" ); recommendations.innerHTML = ""; const trainingMap = { "Python": "Advanced Python & API Development", "JavaScript": "Modern JavaScript & Web Development", "SQL": "Advanced SQL & Database Management", "Cloud Computing": "Cloud Computing with AWS / Azure", "AI / ML": "Artificial Intelligence & Machine Learning", "Cybersecurity": "Cybersecurity Fundamentals & Threat Detection", "Data Analytics": "Data Analytics with Python & Visualization", "Docker / DevOps": "Docker, Git & CI/CD DevOps Training" }; if (missing.length === 0) { recommendations.innerHTML = ` <div style=" padding:18px; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; color:#166534; font-weight:600; "> Candidate has strong coverage of the evaluated industry skills. </div> `; } else { missing.forEach( function(skill) { const recommendation = document.createElement("div"); recommendation.innerHTML = ` <div style=" padding:15px; margin-bottom:12px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; "> <strong> ${skill} </strong> <p style=" color:#64748b; margin-top:5px; "> ${trainingMap[skill]} </p> </div> `; recommendations.appendChild( recommendation ); } ); } } loadCandidates(); </script>
+
+</body>
+
+</html>

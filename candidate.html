@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Register Candidate | SkillTrack India</title>
+
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}">
+
+<style>
+
+    .page {
+        padding: 50px 7%;
+        max-width: 1100px;
+        margin: auto;
+    }
+
+    .page-header {
+        margin-bottom: 30px;
+    }
+
+    .page-header h1 {
+        font-size: 38px;
+        color: #0f172a;
+        margin-bottom: 8px;
+    }
+
+    .page-header p {
+        color: #64748b;
+    }
+
+    .form-card {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 16px;
+        padding: 35px;
+        box-shadow: 0 8px 25px rgba(15, 23, 42, 0.05);
+    }
+
+    .section-title {
+        text-align: left;
+        margin-bottom: 25px;
+    }
+
+    .section-title h2 {
+        font-size: 21px;
+        color: #0f172a;
+        margin-bottom: 5px;
+    }
+
+    .section-title p {
+        font-size: 14px;
+        color: #64748b;
+    }
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+        margin-bottom: 35px;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .form-group label {
+        font-size: 14px;
+        font-weight: 700;
+        color: #334155;
+        margin-bottom: 8px;
+    }
+
+    .form-group input,
+    .form-group select {
+        width: 100%;
+        padding: 12px 14px;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        font-size: 14px;
+        background: white;
+    }
+
+    .skills-section {
+        margin-top: 10px;
+    }
+
+    .skills-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+
+    .skill-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 15px;
+        padding: 15px;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        background: #f8fafc;
+    }
+
+    .skill-name {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 600;
+        color: #334155;
+    }
+
+    .skill-name input {
+        width: 17px;
+        height: 17px;
+        cursor: pointer;
+    }
+
+    .skill-level {
+        padding: 8px 10px;
+        border: 1px solid #cbd5e1;
+        border-radius: 7px;
+        background: white;
+        font-size: 13px;
+    }
+
+    .skill-level:disabled {
+        background: #f1f5f9;
+        color: #94a3b8;
+        cursor: not-allowed;
+    }
+
+    .submit-area {
+        margin-top: 35px;
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    .submit-btn {
+        border: none;
+        cursor: pointer;
+        padding: 13px 25px;
+        border-radius: 8px;
+        background: linear-gradient(135deg, #2563eb, #1d4ed8);
+        color: white;
+        font-size: 14px;
+        font-weight: 700;
+    }
+
+    .submit-btn:hover {
+        transform: translateY(-1px);
+    }
+
+    .message {
+        margin-top: 20px;
+        padding: 12px 15px;
+        border-radius: 8px;
+        display: none;
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    .success {
+        background: #dcfce7;
+        color: #166534;
+    }
+
+    .error {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+
+    @media(max-width: 750px) {
+
+        .form-grid,
+        .skills-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .page {
+            padding: 35px 5%;
+        }
+
+        .form-card {
+            padding: 25px;
+        }
+
+    }
+
+</style>
+
+</head>
+
+<body>
+
+<nav class="navbar">
+
+<div class="logo">
+    SkillTrack India
+</div>
+
+<div class="nav-links">
+
+    <a href="/">Home</a>
+
+    <a href="/candidate">Register Candidate</a>
+
+    <a href="/candidates">Candidates</a>
+
+    <a href="/skill-gap">Skill Gaps</a>
+
+    <a href="/intelligence">AI Intelligence</a>
+
+    <a href="/dashboard">Dashboard</a>
+
+</div>
+
+</nav>
+
+<section class="page">
+
+<div class="page-header">
+
+    <h1>Register Candidate</h1>
+
+    <p>
+        Add candidate information, skills and proficiency levels
+        to build a complete skill profile.
+    </p>
+
+</div>
+
+
+<div class="form-card">
+
+    <form id="candidateForm">
+
+
+        <div class="section-title">
+
+            <h2>Candidate Information</h2>
+
+            <p>
+                Enter the basic information of the candidate.
+            </p>
+
+        </div>
+
+
+        <div class="form-grid">
+
+
+            <div class="form-group">
+
+                <label>Full Name</label>
+
+                <input
+                    type="text"
+                    id="name"
+                    placeholder="Enter full name"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Email</label>
+
+                <input
+                    type="email"
+                    id="email"
+                    placeholder="Enter email address"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Age</label>
+
+                <input
+                    type="number"
+                    id="age"
+                    placeholder="Enter age"
+                    min="1"
+                    max="100"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Gender</label>
+
+                <select id="gender">
+
+                    <option value="">Select Gender</option>
+
+                    <option value="Male">Male</option>
+
+                    <option value="Female">Female</option>
+
+                    <option value="Other">Other</option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Highest Qualification</label>
+
+                <input
+                    type="text"
+                    id="qualification"
+                    placeholder="e.g. BCA"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Field of Study</label>
+
+                <input
+                    type="text"
+                    id="field"
+                    placeholder="e.g. Computer Applications"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Employment Status</label>
+
+                <select id="employment">
+
+                    <option value="">
+                        Select Status
+                    </option>
+
+                    <option value="Employed">
+                        Employed
+                    </option>
+
+                    <option value="Unemployed">
+                        Unemployed
+                    </option>
+
+                    <option value="Student">
+                        Student
+                    </option>
+
+                    <option value="Self-employed">
+                        Self-employed
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Experience (Years)</label>
+
+                <input
+                    type="number"
+                    id="experience"
+                    placeholder="0"
+                    min="0"
+                >
+
+            </div>
+
+        </div>
+
+
+        <div class="skills-section">
+
+            <div class="section-title">
+
+                <h2>Skills & Proficiency</h2>
+
+                <p>
+                    Select the candidate's skills and choose
+                    their current proficiency level.
+                </p>
+
+            </div>
+
+
+            <div class="skills-grid">
+
+
+                <div class="skill-row">
+
+                    <label class="skill-name">
+
+                        <input
+                            type="checkbox"
+                            class="skill-checkbox"
+                            data-skill="Python"
+                        >
+
+                        Python
+
+                    </label>
+
+                    <select
+                        class="skill-level"
+                        data-level="Python"
+                        disabled
+                    >
+
+                        <option value="">Level</option>
+
+                        <option value="Beginner">
+                            Beginner
+                        </option>
+
+                        <option value="Intermediate">
+                            Intermediate
+                        </option>
+
+                        <option value="Advanced">
+                            Advanced
+                        </option>
+
+                        <option value="Expert">
+                            Expert
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="skill-row">
+
+                    <label class="skill-name">
+
+                        <input
+                            type="checkbox"
+                            class="skill-checkbox"
+                            data-skill="SQL"
+                        >
+
+                        SQL
+
+                    </label>
+
+                    <select
+                        class="skill-level"
+                        data-level="SQL"
+                        disabled
+                    >
+
+                        <option value="">Level</option>
+
+                        <option value="Beginner">
+                            Beginner
+                        </option>
+
+                        <option value="Intermediate">
+                            Intermediate
+                        </option>
+
+                        <option value="Advanced">
+                            Advanced
+                        </option>
+
+                        <option value="Expert">
+                            Expert
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="skill-row">
+
+                    <label class="skill-name">
+
+                        <input
+                            type="checkbox"
+                            class="skill-checkbox"
+                            data-skill="JavaScript"
+                        >
+
+                        JavaScript
+
+                    </label>
+
+                    <select
+                        class="skill-level"
+                        data-level="JavaScript"
+                        disabled
+                    >
+
+                        <option value="">Level</option>
+
+                        <option value="Beginner">
+                            Beginner
+                        </option>
+
+                        <option value="Intermediate">
+                            Intermediate
+                        </option>
+
+                        <option value="Advanced">
+                            Advanced
+                        </option>
+
+                        <option value="Expert">
+                            Expert
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="skill-row">
+
+                    <label class="skill-name">
+
+                        <input
+                            type="checkbox"
+                            class="skill-checkbox"
+                            data-skill="Cloud Computing"
+                        >
+
+                        Cloud Computing
+
+                    </label>
+
+                    <select
+                        class="skill-level"
+                        data-level="Cloud Computing"
+                        disabled
+                    >
+
+                        <option value="">Level</option>
+
+                        <option value="Beginner">
+                            Beginner
+                        </option>
+
+                        <option value="Intermediate">
+                            Intermediate
+                        </option>
+
+                        <option value="Advanced">
+                            Advanced
+                        </option>
+
+                        <option value="Expert">
+                            Expert
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="skill-row">
+
+                    <label class="skill-name">
+
+                        <input
+                            type="checkbox"
+                            class="skill-checkbox"
+                            data-skill="AI / ML"
+                        >
+
+                        AI / ML
+
+                    </label>
+
+                    <select
+                        class="skill-level"
+                        data-level="AI / ML"
+                        disabled
+                    >
+
+                        <option value="">Level</option>
+
+                        <option value="Beginner">
+                            Beginner
+                        </option>
+
+                        <option value="Intermediate">
+                            Intermediate
+                        </option>
+
+                        <option value="Advanced">
+                            Advanced
+                        </option>
+
+                        <option value="Expert">
+                            Expert
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="skill-row">
+
+                    <label class="skill-name">
+
+                        <input
+                            type="checkbox"
+                            class="skill-checkbox"
+                            data-skill="Cybersecurity"
+                        >
+
+                        Cybersecurity
+
+                    </label>
+
+                    <select
+                        class="skill-level"
+                        data-level="Cybersecurity"
+                        disabled
+                    >
+
+                        <option value="">Level</option>
+
+                        <option value="Beginner">
+                            Beginner
+                        </option>
+
+                        <option value="Intermediate">
+                            Intermediate
+                        </option>
+
+                        <option value="Advanced">
+                            Advanced
+                        </option>
+
+                        <option value="Expert">
+                            Expert
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="skill-row">
+
+                    <label class="skill-name">
+
+                        <input
+                            type="checkbox"
+                            class="skill-checkbox"
+                            data-skill="Data Analytics"
+                        >
+
+                        Data Analytics
+
+                    </label>
+
+                    <select
+                        class="skill-level"
+                        data-level="Data Analytics"
+                        disabled
+                    >
+
+                        <option value="">Level</option>
+
+                        <option value="Beginner">
+                            Beginner
+                        </option>
+
+                        <option value="Intermediate">
+                            Intermediate
+                        </option>
+
+                        <option value="Advanced">
+                            Advanced
+                        </option>
+
+                        <option value="Expert">
+                            Expert
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="skill-row">
+
+                    <label class="skill-name">
+
+                        <input
+                            type="checkbox"
+                            class="skill-checkbox"
+                            data-skill="Docker / DevOps"
+                        >
+
+                        Docker / DevOps
+
+                    </label>
+
+                    <select
+                        class="skill-level"
+                        data-level="Docker / DevOps"
+                        disabled
+                    >
+
+                        <option value="">Level</option>
+
+                        <option value="Beginner">
+                            Beginner
+                        </option>
+
+                        <option value="Intermediate">
+                            Intermediate
+                        </option>
+
+                        <option value="Advanced">
+                            Advanced
+                        </option>
+
+                        <option value="Expert">
+                            Expert
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="submit-area">
+
+            <button
+                type="submit"
+                class="submit-btn"
+            >
+                Register Candidate
+            </button>
+
+        </div>
+
+
+        <div
+            id="message"
+            class="message"
+        ></div>
+
+
+    </form>
+
+</div>
+
+</section>
+
+<script> document .querySelectorAll(".skill-checkbox") .forEach(function(checkbox) { checkbox.addEventListener( "change", function() { const skill = this.dataset.skill; const levelSelect = document.querySelector( `[data-level="${skill}"]` ); if (this.checked) { levelSelect.disabled = false; levelSelect.value = "Intermediate"; } else { levelSelect.disabled = true; levelSelect.value = ""; } } ); }); document .getElementById("candidateForm") .addEventListener( "submit", async function(event) { event.preventDefault(); const selectedSkills = []; const skillLevels = []; document .querySelectorAll( ".skill-checkbox:checked" ) .forEach(function(checkbox) { const skill = checkbox.dataset.skill; const levelSelect = document.querySelector( `[data-level="${skill}"]` ); const level = levelSelect.value || "Intermediate"; selectedSkills.push(skill); skillLevels.push( skill + ": " + level ); }); const candidateData = { name: document.getElementById("name") .value.trim(), email: document.getElementById("email") .value.trim(), age: document.getElementById("age") .value, gender: document.getElementById("gender") .value, qualification: document.getElementById("qualification") .value.trim(), field: document.getElementById("field") .value.trim(), skills: selectedSkills.join(", "), skill_levels: skillLevels.join(", "), employment: document.getElementById("employment") .value, experience: document.getElementById("experience") .value || 0 }; try { const response = await fetch( "/api/candidate", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify( candidateData ) } ); const result = await response.json(); const message = document.getElementById( "message" ); if (response.ok) { message.className = "message success"; message.style.display = "block"; message.innerText = "Candidate registered successfully!"; document .getElementById( "candidateForm" ) .reset(); document .querySelectorAll( ".skill-level" ) .forEach(function(select) { select.disabled = true; }); } else { message.className = "message error"; message.style.display = "block"; message.innerText = result.error || "Unable to register candidate."; } } catch(error) { console.error(error); const message = document.getElementById( "message" ); message.className = "message error"; message.style.display = "block"; message.innerText = "Server error. Make sure Flask is running."; } } ); </script>
+
+<script>
+const originalFetch = window.fetch;
+window.fetch = async function(...args) {
+    const response = await originalFetch(...args);
+    const requestUrl = typeof args[0] === 'string' ? args[0] : args[0].url;
+    if (requestUrl && requestUrl.endsWith('/api/candidate') && response.ok) {
+        const payload = await response.clone().json();
+        if (payload.candidate_id) {
+            localStorage.setItem('skilltrack_candidate_id', String(payload.candidate_id));
+            localStorage.setItem('skilltrack_skill_id', payload.skill_id || '');
+        }
+    }
+    return response;
+};
+</script>
+</body> </html>

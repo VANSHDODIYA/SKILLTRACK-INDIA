@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assessment | SkillTrack India</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        body { background: #f5f7fb; }
+        .page { padding: 50px 7%; max-width: 1200px; margin: auto; }
+        .hero-box { background: linear-gradient(135deg, #eff6ff, #ffffff); border: 1px solid #dbeafe; border-radius: 18px; padding: 25px 30px; margin-bottom: 25px; }
+        .assessment-layout { display: grid; grid-template-columns: 3fr 1fr; gap: 24px; }
+        .card { background: white; border: 1px solid #e2e8f0; border-radius: 16px; padding: 24px; box-shadow: 0 10px 25px rgba(15, 23, 42, 0.04); }
+        .question { padding: 18px 0; border-bottom: 1px solid #e2e8f0; }
+        .question:last-child { border-bottom: none; }
+        .question h3 { font-size: 18px; margin-bottom: 12px; }
+        .option-list { display: grid; gap: 10px; }
+        .option-list label { display: flex; gap: 10px; align-items: center; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px 14px; }
+        .summary-panel { position: sticky; top: 90px; }
+        .score-pill { display: inline-block; padding: 8px 12px; background: #dcfce7; color: #166534; border-radius: 999px; font-weight: 700; }
+        .btn { border: none; border-radius: 10px; padding: 12px 18px; font-weight: 700; cursor: pointer; background: linear-gradient(135deg,#2563eb,#1d4ed8); color:white; }
+        .secondary { background: #e2e8f0; color: #0f172a; }
+        .muted { color: #64748b; }
+        @media(max-width: 900px){ .assessment-layout { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+<nav class="navbar">
+    <div class="logo">SkillTrack India</div>
+    <div class="nav-links">
+        <a href="/">Home</a>
+        <a href="/candidate">Register Candidate</a>
+        <a href="/assessments">Assessments</a>
+        <a href="/counselling">Counselling</a>
+        <a href="/dashboard">Dashboard</a>
+    </div>
+</nav>
+<section class="page">
+    <div class="hero-box">
+        <span class="score-pill">Assessment</span>
+        <h1 style="margin-top:18px; font-size:42px;">Career & Skill Readiness Assessment</h1>
+        <p class="muted" style="margin-top:10px;">Structured evaluation across technical skills, digital literacy, communication, aptitude, problem solving, and career interests.</p>
+    </div>
+    <div class="assessment-layout">
+        <div class="card">
+            <form id="assessmentForm">
+                <div id="questionsContainer"></div>
+                <div style="margin-top:25px; display:flex; justify-content:flex-end; gap:12px;">
+                    <button type="button" class="btn secondary" onclick="window.location.href='/'">Back</button>
+                    <button type="submit" class="btn">Submit Assessment</button>
+                </div>
+            </form>
+        </div>
+        <div class="card summary-panel">
+            <h3>Assessment Snapshot</h3>
+            <p class="muted" style="margin-top:8px;">This score will help identify your strongest skills and top gaps before training or job recommendations.</p>
+            <div style="margin-top:20px; padding:18px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px;">
+                <p style="font-size:12px; color:#64748b;">Overall Readiness Score</p>
+                <h2 id="overallScore">0%</h2>
+            </div>
+            <div id="resultSummary" style="margin-top:18px; color:#334155; line-height:1.8;"></div>
+        </div>
+    </div>
+</section>
+<script>
+async function loadAssessmentQuestions() {
+    const container = document.getElementById('questionsContainer');
+    const response = await fetch('/api/assessments/questions');
+    const data = await response.json();
+    const questions = data.questions || [];
+    if (!questions.length) {
+        container.innerHTML = '<p class="muted">No assessment questions available yet.</p>';
+        return;
+    }
+    questions.forEach((question, idx) => {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'question';
+        const title = document.createElement('h3');
+        title.textContent = `${idx + 1}. ${question.question_text}`;
+        wrapper.appendChild(title);
+        const optionList = document.createElement('div');
+        optionList.className = 'option-list';
+        const options = question.options || [];
+        options.forEach((option) => {
+            const label = document.createElement('label');
+            const radio = document.createElement('input');
+            radio.type = 'radio';
+            radio.name = `question_${question.id}`;
+            radio.value = option.id;
+            label.appendChild(radio);
+            label.appendChild(document.createTextNode(option.option_text));
+            optionList.appendChild(label);
+        });
+        wrapper.appendChild(optionList);
+        container.appendChild(wrapper);
+    });
+}
+
+document.getElementById('assessmentForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const answers = {};
+    const questionBlocks = document.querySelectorAll('.question');
+    questionBlocks.forEach((block, idx) => {
+        const selected = block.querySelector('input[type="radio"]:checked');
+        if (!selected) return;
+        const inputName = selected.name;
+        const questionId = inputName.replace('question_', '');
+        answers[questionId] = selected.value;
+    });
+    const candidateId = Number(localStorage.getItem('skilltrack_candidate_id') || 1);
+    const result = await fetch('/api/assessments/submit', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ candidate_id: candidateId, target_role: 'Data Analyst', answers })
+    });
+    const data = await result.json();
+    document.getElementById('overallScore').textContent = `${Math.round(data.overall_score || 0)}%`;
+    const summary = document.getElementById('resultSummary');
+    summary.innerHTML = `
+        <strong>Overall Readiness Score:</strong> ${Math.round(data.overall_score || 0)}%<br>
+        <strong>Technical Skills:</strong> ${Math.round(data.category_scores['Technical Skills'] || 0)}%<br>
+        <strong>Digital Literacy:</strong> ${Math.round(data.category_scores['Digital Literacy'] || 0)}%<br>
+        <strong>Communication:</strong> ${Math.round(data.category_scores['Communication'] || 0)}%<br>
+        <strong>Problem Solving:</strong> ${Math.round(data.category_scores['Problem Solving'] || 0)}%<br>
+        <strong>Aptitude:</strong> ${Math.round(data.category_scores['Aptitude'] || 0)}%<br>
+        <strong>Career Interests:</strong> ${Math.round(data.category_scores['Career Interests'] || 0)}%<br>
+        <strong>Job Readiness:</strong> ${Math.round(data.category_scores['Job Readiness'] || 0)}%<br>
+        <strong>Summary:</strong> ${data.summary || ''}
+    `;
+    if (data.recommendations && data.recommendations.length) {
+        summary.innerHTML += '<br><br><strong>Recommendation:</strong> ' + (data.recommendations[0].name || data.recommendations[0].names.join(', '));
+    }
+    if (data.strong_areas && data.strong_areas.length) {
+        summary.innerHTML += '<br><strong>Strong Areas:</strong> ' + data.strong_areas.join(', ');
+    }
+    if (data.areas_to_improve && data.areas_to_improve.length) {
+        summary.innerHTML += '<br><strong>Areas to Improve:</strong> ' + data.areas_to_improve.join(', ');
+    }
+    if (data.critical_skill_gap) {
+        summary.innerHTML += '<br><strong>Critical Skill Gap:</strong> ' + data.critical_skill_gap;
+    }
+    if (data.recommended_counselling) {
+        summary.innerHTML += '<br><strong>Recommended Counselling:</strong> Speak with an expert to turn these gaps into a focused plan.';
+    }
+});
+
+loadAssessmentQuestions();
+</script>
+</body>
+</html>

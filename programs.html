@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Training Programs - SkillTrack India</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+    <style>
+
+        .program-page {
+            padding: 50px 7%;
+        }
+
+        .page-heading {
+            margin-bottom: 35px;
+        }
+
+        .page-heading h1 {
+            font-size: 38px;
+            margin-bottom: 10px;
+        }
+
+        .page-heading p {
+            color: #64748b;
+            font-size: 17px;
+        }
+
+        .stats-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 20px;
+
+            margin-bottom: 30px;
+
+        }
+
+        .stat-card {
+
+            background: white;
+
+            padding: 25px;
+
+            border-radius: 14px;
+
+            box-shadow:
+                0 5px 20px
+                rgba(0,0,0,0.07);
+
+        }
+
+        .stat-card h3 {
+
+            color: #64748b;
+
+            font-size: 14px;
+
+            margin-bottom: 10px;
+
+        }
+
+        .stat-number {
+
+            font-size: 32px;
+
+            font-weight: bold;
+
+            color: #2563eb;
+
+        }
+
+        .program-card {
+
+            background: white;
+
+            padding: 35px;
+
+            border-radius: 14px;
+
+            box-shadow:
+                0 5px 20px
+                rgba(0,0,0,0.07);
+
+            margin-bottom: 30px;
+
+        }
+
+        .program-card h2 {
+            margin-bottom: 25px;
+        }
+
+        .form-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                1fr 1fr;
+
+            gap: 20px;
+
+        }
+
+        .form-group {
+
+            display: flex;
+
+            flex-direction: column;
+
+        }
+
+        .full {
+
+            grid-column: span 2;
+
+        }
+
+        label {
+
+            font-weight: bold;
+
+            margin-bottom: 8px;
+
+        }
+
+        input,
+        select {
+
+            padding: 12px;
+
+            border:
+                1px solid #cbd5e1;
+
+            border-radius: 8px;
+
+            font-size: 15px;
+
+        }
+
+        .save-button {
+
+            margin-top: 25px;
+
+            padding: 14px 30px;
+
+            background: #2563eb;
+
+            color: white;
+
+            border: none;
+
+            border-radius: 8px;
+
+            font-size: 16px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+        }
+
+        .save-button:hover {
+
+            background: #1d4ed8;
+
+        }
+
+        .message {
+
+            margin-top: 15px;
+
+            font-weight: bold;
+
+        }
+
+        .program-table {
+
+            background: white;
+
+            padding: 30px;
+
+            border-radius: 14px;
+
+            box-shadow:
+                0 5px 20px
+                rgba(0,0,0,0.07);
+
+            overflow-x: auto;
+
+        }
+
+        table {
+
+            width: 100%;
+
+            border-collapse: collapse;
+
+            min-width: 950px;
+
+        }
+
+        th,
+        td {
+
+            padding: 14px;
+
+            text-align: left;
+
+            border-bottom:
+                1px solid #e2e8f0;
+
+        }
+
+        th {
+
+            background: #f8fafc;
+
+        }
+
+        .active {
+
+            color: #166534;
+
+            background: #dcfce7;
+
+            padding: 6px 10px;
+
+            border-radius: 20px;
+
+            font-weight: bold;
+
+            font-size: 13px;
+
+        }
+
+        .completed {
+
+            color: #1d4ed8;
+
+            background: #dbeafe;
+
+            padding: 6px 10px;
+
+            border-radius: 20px;
+
+            font-weight: bold;
+
+            font-size: 13px;
+
+        }
+
+        @media(max-width: 900px) {
+
+            .stats-grid {
+
+                grid-template-columns:
+                    repeat(2, 1fr);
+
+            }
+
+        }
+
+        @media(max-width: 700px) {
+
+            .form-grid {
+
+                grid-template-columns: 1fr;
+
+            }
+
+            .full {
+
+                grid-column: span 1;
+
+            }
+
+        }
+
+        @media(max-width: 600px) {
+
+            .stats-grid {
+
+                grid-template-columns: 1fr;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<nav class="navbar">
+
+    <div class="logo">
+        SkillTrack India
+    </div>
+
+    <div class="nav-links">
+
+        <a href="/">Home</a>
+
+        <a href="/dashboard">Dashboard</a>
+
+        <a href="/skill-gap">Skill Gaps</a>
+
+        <a href="/candidate">Register</a>
+
+        <a href="/candidates">Candidates</a>
+
+        <a href="/employment">Employment</a>
+
+        <a href="/programs">Programs</a>
+
+    </div>
+
+</nav>
+
+
+<main class="program-page">
+
+
+    <div class="page-heading">
+
+        <h1>
+            Training Programs & Impact
+        </h1>
+
+        <p>
+            Track participation, completion,
+            certification and employment outcomes
+            of skilling initiatives.
+        </p>
+
+    </div>
+
+
+    <!-- PROGRAM STATISTICS -->
+
+    <div class="stats-grid">
+
+
+        <div class="stat-card">
+
+            <h3>
+                Training Programs
+            </h3>
+
+            <div
+                class="stat-number"
+                id="totalPrograms"
+            >
+                0
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <h3>
+                Total Enrolled
+            </h3>
+
+            <div
+                class="stat-number"
+                id="totalEnrolled"
+            >
+                0
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <h3>
+                Completion Rate
+            </h3>
+
+            <div
+                class="stat-number"
+                id="completionRate"
+            >
+                0%
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <h3>
+                Employment After Training
+            </h3>
+
+            <div
+                class="stat-number"
+                id="employmentRate"
+            >
+                0%
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- ADD PROGRAM -->
+
+    <div class="program-card">
+
+        <h2>
+            Add Training Program
+        </h2>
+
+
+        <div class="form-grid">
+
+
+            <div class="form-group">
+
+                <label>
+                    Program Name
+                </label>
+
+                <input
+                    type="text"
+                    id="programName"
+                    placeholder="Example: Digital Skills Program"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Training Provider
+                </label>
+
+                <input
+                    type="text"
+                    id="provider"
+                    placeholder="Example: Skill India Centre"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Skill Area
+                </label>
+
+                <input
+                    type="text"
+                    id="skillArea"
+                    placeholder="Example: AI & Machine Learning"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Location
+                </label>
+
+                <input
+                    type="text"
+                    id="location"
+                    placeholder="Example: Rajasthan"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Duration
+                </label>
+
+                <input
+                    type="text"
+                    id="duration"
+                    placeholder="Example: 12 Weeks"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Enrolled Candidates
+                </label>
+
+                <input
+                    type="number"
+                    id="enrolled"
+                    value="0"
+                    min="0"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Completed Candidates
+                </label>
+
+                <input
+                    type="number"
+                    id="completed"
+                    value="0"
+                    min="0"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Certified Candidates
+                </label>
+
+                <input
+                    type="number"
+                    id="certified"
+                    value="0"
+                    min="0"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Employed After Training
+                </label>
+
+                <input
+                    type="number"
+                    id="employedAfterTraining"
+                    value="0"
+                    min="0"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Program Status
+                </label>
+
+                <select id="programStatus">
+
+                    <option value="Active">
+                        Active
+                    </option>
+
+                    <option value="Completed">
+                        Completed
+                    </option>
+
+                </select>
+
+            </div>
+
+
+        </div>
+
+
+        <button
+            class="save-button"
+            onclick="saveProgram()"
+        >
+
+            Add Training Program
+
+        </button>
+
+
+        <div
+            class="message"
+            id="message"
+        ></div>
+
+
+    </div>
+
+
+    <!-- PROGRAM TABLE -->
+
+    <div class="program-table">
+
+        <h2>
+            Training Program Records
+        </h2>
+
+        <br>
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>ID</th>
+
+                    <th>Program</th>
+
+                    <th>Provider</th>
+
+                    <th>Skill Area</th>
+
+                    <th>Location</th>
+
+                    <th>Enrolled</th>
+
+                    <th>Completed</th>
+
+                    <th>Certified</th>
+
+                    <th>Employed</th>
+
+                    <th>Status</th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody id="programTable">
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+</main>
+
+
+<script>
+
+
+async function saveProgram() {
+
+
+    const programName =
+        document.getElementById(
+            "programName"
+        ).value;
+
+
+    const provider =
+        document.getElementById(
+            "provider"
+        ).value;
+
+
+    const skillArea =
+        document.getElementById(
+            "skillArea"
+        ).value;
+
+
+    const location =
+        document.getElementById(
+            "location"
+        ).value;
+
+
+    const duration =
+        document.getElementById(
+            "duration"
+        ).value;
+
+
+    const enrolled =
+        document.getElementById(
+            "enrolled"
+        ).value;
+
+
+    const completed =
+        document.getElementById(
+            "completed"
+        ).value;
+
+
+    const certified =
+        document.getElementById(
+            "certified"
+        ).value;
+
+
+    const employedAfterTraining =
+        document.getElementById(
+            "employedAfterTraining"
+        ).value;
+
+
+    const programStatus =
+        document.getElementById(
+            "programStatus"
+        ).value;
+
+
+    if (!programName) {
+
+        document.getElementById(
+            "message"
+        ).innerText =
+            "Please enter a program name.";
+
+        return;
+
+    }
+
+
+    try {
+
+
+        const response = await fetch(
+            "/api/programs",
+            {
+
+                method: "POST",
+
+                headers: {
+
+                    "Content-Type":
+                        "application/json"
+
+                },
+
+                body: JSON.stringify({
+
+                    program_name:
+                        programName,
+
+                    provider:
+                        provider,
+
+                    skill_area:
+                        skillArea,
+
+                    location:
+                        location,
+
+                    duration:
+                        duration,
+
+                    enrolled:
+                        Number(enrolled),
+
+                    completed:
+                        Number(completed),
+
+                    certified:
+                        Number(certified),
+
+                    employed_after_training:
+                        Number(
+                            employedAfterTraining
+                        ),
+
+                    program_status:
+                        programStatus
+
+                })
+
+            }
+        );
+
+
+        const result =
+            await response.json();
+
+
+        document.getElementById(
+            "message"
+        ).innerText =
+            result.message;
+
+
+        if (result.success) {
+
+            loadPrograms();
+
+            loadStats();
+
+        }
+
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+        document.getElementById(
+            "message"
+        ).innerText =
+            "Unable to save program.";
+
+    }
+
+}
+
+
+async function loadPrograms() {
+
+
+    const response =
+        await fetch("/api/programs");
+
+
+    const data =
+        await response.json();
+
+
+    const table =
+        document.getElementById(
+            "programTable"
+        );
+
+
+    table.innerHTML = "";
+
+
+    data.forEach(program => {
+
+
+        const row =
+            document.createElement("tr");
+
+
+        const statusClass =
+            program.program_status
+            === "Active"
+            ? "active"
+            : "completed";
+
+
+        row.innerHTML = `
+
+            <td>${program.id}</td>
+
+            <td>${program.program_name}</td>
+
+            <td>${program.provider || "-"}</td>
+
+            <td>${program.skill_area || "-"}</td>
+
+            <td>${program.location || "-"}</td>
+
+            <td>${program.enrolled}</td>
+
+            <td>${program.completed}</td>
+
+            <td>${program.certified}</td>
+
+            <td>${program.employed_after_training}</td>
+
+            <td>
+                <span class="${statusClass}">
+                    ${program.program_status}
+                </span>
+            </td>
+
+        `;
+
+
+        table.appendChild(row);
+
+    });
+
+}
+
+
+async function loadStats() {
+
+
+    const response =
+        await fetch(
+            "/api/training-stats"
+        );
+
+
+    const data =
+        await response.json();
+
+
+    document.getElementById(
+        "totalPrograms"
+    ).innerText =
+        data.total_programs;
+
+
+    document.getElementById(
+        "totalEnrolled"
+    ).innerText =
+        data.total_enrolled;
+
+
+    document.getElementById(
+        "completionRate"
+    ).innerText =
+        data.completion_rate + "%";
+
+
+    document.getElementById(
+        "employmentRate"
+    ).innerText =
+        data.employment_rate + "%";
+
+}
+
+
+loadPrograms();
+
+loadStats();
+
+
+</script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Job Matching - SkillTrack India</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+
+<body>
+
+
+<nav class="navbar">
+
+    <div class="logo">
+        SkillTrack India
+    </div>
+
+
+    <div class="nav-links">
+
+        <a href="/">Home</a>
+
+        <a href="/candidate">
+            Register Candidate
+        </a>
+
+        <a href="/candidates">
+            Candidates
+        </a>
+
+        <a href="/skill-gap">
+            Skill Gaps
+        </a>
+
+        <a href="/intelligence">
+            AI Intelligence
+        </a>
+
+        <a href="/programs">
+            Programs
+        </a>
+
+        <a href="/employment">
+            Employment
+        </a>
+
+        <a href="/dashboard">
+            Dashboard
+        </a>
+
+    </div>
+
+</nav>
+
+
+
+<section style="padding:55px 7%;">
+
+    <div style="
+        max-width:1200px;
+        margin:auto;
+    ">
+
+
+        <h1 style="
+            font-size:42px;
+            margin-bottom:8px;
+        ">
+            Smart Job Matching
+        </h1>
+
+
+        <p style="
+            color:#64748b;
+            font-size:17px;
+            margin-bottom:35px;
+        ">
+            Match candidate skills with suitable job roles
+            and identify the best employment opportunities.
+        </p>
+
+
+
+        <!-- CANDIDATE SELECTION -->
+
+        <div class="card"
+             style="margin-bottom:25px;">
+
+            <h2 style="margin-bottom:18px;">
+                Select Candidate
+            </h2>
+
+
+            <select id="candidateSelect"
+                    style="
+                        width:100%;
+                        padding:14px;
+                        border:1px solid #e2e8f0;
+                        border-radius:9px;
+                        font-size:15px;
+                    ">
+
+                <option value="">
+                    Select a candidate
+                </option>
+
+            </select>
+
+        </div>
+
+
+
+        <!-- CANDIDATE PROFILE -->
+
+        <div id="profile"
+             style="display:none; margin-bottom:25px;">
+
+            <div class="card">
+
+                <h2 style="margin-bottom:20px;">
+                    Candidate Profile
+                </h2>
+
+
+                <div style="
+                    display:grid;
+                    grid-template-columns:
+                        repeat(3,1fr);
+                    gap:20px;
+                ">
+
+
+                    <div>
+
+                        <p style="
+                            color:#64748b;
+                            font-size:14px;
+                        ">
+                            Candidate
+                        </p>
+
+                        <h3 id="candidateName">
+                            -
+                        </h3>
+
+                    </div>
+
+
+
+                    <div>
+
+                        <p style="
+                            color:#64748b;
+                            font-size:14px;
+                        ">
+                            Qualification
+                        </p>
+
+                        <h3 id="qualification">
+                            -
+                        </h3>
+
+                    </div>
+
+
+
+                    <div>
+
+                        <p style="
+                            color:#64748b;
+                            font-size:14px;
+                        ">
+                            Skills
+                        </p>
+
+                        <h3 id="candidateSkills">
+                            -
+                        </h3>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- MATCHING RESULTS -->
+
+        <div id="results"
+             style="display:none;">
+
+
+            <div class="card"
+                 style="margin-bottom:25px;">
+
+
+                <h2 style="margin-bottom:10px;">
+                    Recommended Job Roles
+                </h2>
+
+
+                <p style="
+                    color:#64748b;
+                    margin-bottom:25px;
+                ">
+                    Roles ranked according to the candidate's
+                    current skill profile.
+                </p>
+
+
+                <div id="jobResults">
+                </div>
+
+
+            </div>
+
+
+
+            <!-- MATCHING EXPLANATION -->
+
+            <div class="card">
+
+
+                <h2 style="margin-bottom:15px;">
+                    🧠 Matching Intelligence
+                </h2>
+
+
+                <div style="
+                    padding:20px;
+                    background:#eff6ff;
+                    border:1px solid #bfdbfe;
+                    border-radius:12px;
+                ">
+
+                    <p id="matchingMessage"
+                       style="
+                        color:#1e3a8a;
+                        line-height:1.7;
+                       ">
+                    </p>
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- EMPTY STATE -->
+
+        <div id="emptyState"
+             class="card"
+             style="
+                text-align:center;
+                padding:50px;
+             ">
+
+            <div style="
+                font-size:45px;
+                margin-bottom:15px;
+            ">
+                💼
+            </div>
+
+            <h2>
+                Select a candidate
+            </h2>
+
+            <p style="
+                color:#64748b;
+                margin-top:8px;
+            ">
+                Select a registered candidate to see
+                suitable job recommendations.
+            </p>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+
+<script>
+
+
+let candidates = [];
+
+
+
+/* ========================= */
+/* LOAD CANDIDATES */
+/* ========================= */
+
+
+async function loadCandidates() {
+
+
+    try {
+
+
+        const response =
+            await fetch(
+                "/api/candidates"
+            );
+
+
+        candidates =
+            await response.json();
+
+
+        const select =
+            document.getElementById(
+                "candidateSelect"
+            );
+
+
+        select.innerHTML =
+            '<option value="">Select a candidate</option>';
+
+
+        candidates.forEach(
+            function(candidate) {
+
+
+                const option =
+                    document.createElement(
+                        "option"
+                    );
+
+
+                option.value =
+                    candidate.id;
+
+
+                option.textContent =
+                    candidate.name;
+
+
+                select.appendChild(
+                    option
+                );
+
+
+            }
+        );
+
+
+    }
+
+    catch(error) {
+
+
+        console.error(error);
+
+
+        document.getElementById(
+            "candidateSelect"
+        ).innerHTML =
+            '<option value="">Unable to load candidates</option>';
+
+
+    }
+
+}
+
+
+
+/* ========================= */
+/* JOB DATABASE */
+/* ========================= */
+
+
+const jobs = [
+
+
+    {
+        title:
+            "Python Developer",
+
+        skills: [
+            "python",
+            "sql"
+        ],
+
+        description:
+            "Develop applications, APIs and backend systems using Python."
+    },
+
+
+    {
+        title:
+            "Full Stack Web Developer",
+
+        skills: [
+            "python",
+            "javascript",
+            "sql"
+        ],
+
+        description:
+            "Build complete web applications using frontend and backend technologies."
+    },
+
+
+    {
+        title:
+            "Data Analyst",
+
+        skills: [
+            "sql",
+            "data analytics",
+            "python"
+        ],
+
+        description:
+            "Analyze datasets and generate business insights using data tools."
+    },
+
+
+    {
+        title:
+            "AI / ML Engineer",
+
+        skills: [
+            "python",
+            "ai / ml",
+            "data analytics"
+        ],
+
+        description:
+            "Build machine learning models and intelligent data-driven solutions."
+    },
+
+
+    {
+        title:
+            "Cloud Engineer",
+
+        skills: [
+            "cloud computing",
+            "docker / devops",
+            "python"
+        ],
+
+        description:
+            "Deploy and manage scalable cloud-based applications and services."
+    },
+
+
+    {
+        title:
+            "Cybersecurity Analyst",
+
+        skills: [
+            "cybersecurity",
+            "sql",
+            "cloud computing"
+        ],
+
+        description:
+            "Monitor systems, identify threats and support information security."
+    },
+
+
+    {
+        title:
+            "DevOps Engineer",
+
+        skills: [
+            "docker / devops",
+            "cloud computing",
+            "python"
+        ],
+
+        description:
+            "Automate development, deployment and cloud infrastructure processes."
+    },
+
+
+    {
+        title:
+            "JavaScript Developer",
+
+        skills: [
+            "javascript",
+            "sql"
+        ],
+
+        description:
+            "Create interactive web applications and modern frontend experiences."
+    }
+
+
+];
+
+
+
+/* ========================= */
+/* SELECT CANDIDATE */
+/* ========================= */
+
+
+document.getElementById(
+    "candidateSelect"
+).addEventListener(
+    "change",
+    function() {
+
+
+        const candidateId =
+            Number(this.value);
+
+
+        if (!candidateId) {
+
+
+            document.getElementById(
+                "profile"
+            ).style.display =
+                "none";
+
+
+            document.getElementById(
+                "results"
+            ).style.display =
+                "none";
+
+
+            document.getElementById(
+                "emptyState"
+            ).style.display =
+                "block";
+
+
+            return;
+
+        }
+
+
+        const candidate =
+            candidates.find(
+                function(item) {
+
+                    return Number(
+                        item.id
+                    ) === candidateId;
+
+                }
+            );
+
+
+        if (!candidate) {
+
+            return;
+
+        }
+
+
+        showCandidate(
+            candidate
+        );
+
+
+        matchJobs(
+            candidate
+        );
+
+
+    }
+);
+
+
+
+/* ========================= */
+/* SHOW CANDIDATE */
+/* ========================= */
+
+
+function showCandidate(
+    candidate
+) {
+
+
+    document.getElementById(
+        "candidateName"
+    ).innerText =
+        candidate.name || "-";
+
+
+    document.getElementById(
+        "qualification"
+    ).innerText =
+        candidate.qualification || "-";
+
+
+    document.getElementById(
+        "candidateSkills"
+    ).innerText =
+        candidate.skills || "No skills registered";
+
+
+    document.getElementById(
+        "profile"
+    ).style.display =
+        "block";
+
+
+    document.getElementById(
+        "emptyState"
+    ).style.display =
+        "none";
+
+
+}
+
+
+
+/* ========================= */
+/* MATCH JOBS */
+/* ========================= */
+
+
+function matchJobs(
+    candidate
+) {
+
+
+    const candidateSkills =
+        String(
+            candidate.skills || ""
+        )
+        .toLowerCase()
+        .split(",")
+        .map(
+            function(skill) {
+
+                return skill.trim();
+
+            }
+        )
+        .filter(
+            function(skill) {
+
+                return skill.length > 0;
+
+            }
+        );
+
+
+
+    const matchedJobs =
+        jobs.map(
+            function(job) {
+
+
+                let matched =
+                    0;
+
+
+                job.skills.forEach(
+                    function(requiredSkill) {
+
+
+                        if (
+                            candidateSkills.includes(
+                                requiredSkill
+                            )
+                        ) {
+
+                            matched++;
+
+                        }
+
+
+                    }
+                );
+
+
+                const percentage =
+                    Math.round(
+                        (
+                            matched /
+                            job.skills.length
+                        ) * 100
+                    );
+
+
+                return {
+
+                    ...job,
+
+                    matched:
+                        matched,
+
+                    percentage:
+                        percentage
+
+                };
+
+
+            }
+        )
+        .filter(
+            function(job) {
+
+                return job.matched > 0;
+
+            }
+        )
+        .sort(
+            function(a, b) {
+
+                return b.percentage -
+                       a.percentage;
+
+            }
+        );
+
+
+
+    displayJobs(
+        matchedJobs
+    );
+
+
+}
+
+
+
+/* ========================= */
+/* DISPLAY JOBS */
+/* ========================= */
+
+
+function displayJobs(
+    matchedJobs
+) {
+
+
+    const container =
+        document.getElementById(
+            "jobResults"
+        );
+
+
+    container.innerHTML =
+        "";
+
+
+    if (
+        matchedJobs.length === 0
+    ) {
+
+
+        container.innerHTML = `
+
+            <div style="
+                padding:25px;
+                text-align:center;
+                background:#f8fafc;
+                border-radius:12px;
+            ">
+
+                <h3>
+                    No suitable roles found
+                </h3>
+
+                <p style="
+                    color:#64748b;
+                    margin-top:8px;
+                ">
+                    Improve the candidate's skills
+                    through targeted training.
+                </p>
+
+            </div>
+
+        `;
+
+
+        document.getElementById(
+            "matchingMessage"
+        ).innerText =
+            "No strong job matches are available yet. Skill-gap training can improve employment opportunities.";
+
+
+    }
+
+    else {
+
+
+        matchedJobs.forEach(
+            function(job, index) {
+
+
+                const card =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                card.style.cssText = `
+
+                    padding:22px;
+
+                    margin-bottom:15px;
+
+                    border:
+                        1px solid #e2e8f0;
+
+                    border-radius:12px;
+
+                    background:#ffffff;
+
+                `;
+
+
+                let matchLabel =
+                    "Good Match";
+
+
+                if (
+                    job.percentage >= 80
+                ) {
+
+                    matchLabel =
+                        "Excellent Match";
+
+                }
+
+                else if (
+                    job.percentage >= 50
+                ) {
+
+                    matchLabel =
+                        "Good Match";
+
+                }
+
+                else {
+
+                    matchLabel =
+                        "Partial Match";
+
+                }
+
+
+                card.innerHTML = `
+
+                    <div style="
+                        display:flex;
+                        justify-content:space-between;
+                        align-items:center;
+                        gap:20px;
+                    ">
+
+
+                        <div style="
+                            flex:1;
+                        ">
+
+                            <div style="
+                                display:flex;
+                                align-items:center;
+                                gap:10px;
+                                margin-bottom:8px;
+                            ">
+
+                                <span style="
+                                    width:32px;
+                                    height:32px;
+                                    display:flex;
+                                    align-items:center;
+                                    justify-content:center;
+                                    background:#eff6ff;
+                                    border-radius:50%;
+                                ">
+                                    💼
+                                </span>
+
+                                <h3>
+                                    ${job.title}
+                                </h3>
+
+                            </div>
+
+
+                            <p style="
+                                color:#64748b;
+                                margin-bottom:12px;
+                            ">
+                                ${job.description}
+                            </p>
+
+
+                            <p style="
+                                font-size:14px;
+                                color:#475569;
+                            ">
+                                Required skills:
+                                ${job.skills.join(", ")}
+                            </p>
+
+
+                        </div>
+
+
+                        <div style="
+                            min-width:120px;
+                            text-align:center;
+                        ">
+
+
+                            <div style="
+                                font-size:28px;
+                                font-weight:800;
+                                color:#2563eb;
+                            ">
+                                ${job.percentage}%
+                            </div>
+
+
+                            <div style="
+                                font-size:13px;
+                                color:#64748b;
+                            ">
+                                ${matchLabel}
+                            </div>
+
+
+                        </div>
+
+
+                    </div>
+
+
+                    <div style="
+                        margin-top:18px;
+                        height:8px;
+                        background:#e2e8f0;
+                        border-radius:20px;
+                        overflow:hidden;
+                    ">
+
+                        <div style="
+                            width:${job.percentage}%;
+                            height:100%;
+                            background:#2563eb;
+                            border-radius:20px;
+                        ">
+                        </div>
+
+                    </div>
+
+                `;
+
+
+                container.appendChild(
+                    card
+                );
+
+
+            }
+        );
+
+
+        const bestMatch =
+            matchedJobs[0];
+
+
+        document.getElementById(
+            "matchingMessage"
+        ).innerText =
+            "The strongest current match is " +
+            bestMatch.title +
+            " with a " +
+            bestMatch.percentage +
+            "% skill match. Additional training can improve eligibility for higher-match roles.";
+
+
+    }
+
+
+    document.getElementById(
+        "results"
+    ).style.display =
+        "block";
+
+
+}
+
+
+
+/* ========================= */
+/* START */
+/* ========================= */
+
+
+loadCandidates();
+
+
+</script>
+
+
+</body>
+
+</html>

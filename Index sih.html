@@ -1,0 +1,1743 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>SkillTrack India</title>
+
+    <link rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}">
+
+    <style>
+
+        /* =========================
+           HERO
+        ========================= */
+
+        .home-hero {
+
+            min-height: 78vh;
+
+            display: flex;
+
+            align-items: center;
+
+            padding: 80px 7%;
+
+            background:
+                radial-gradient(
+                    circle at 85% 20%,
+                    rgba(37,99,235,0.13),
+                    transparent 32%
+                ),
+                linear-gradient(
+                    135deg,
+                    #eff6ff,
+                    #ffffff
+                );
+
+        }
+
+
+        .hero-grid {
+
+            width: 100%;
+
+            max-width: 1250px;
+
+            margin: auto;
+
+            display: grid;
+
+            grid-template-columns:
+                1.15fr
+                0.85fr;
+
+            gap: 70px;
+
+            align-items: center;
+
+        }
+
+
+        .hero-badge {
+
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+            padding: 8px 14px;
+
+            background: #dbeafe;
+
+            color: #1d4ed8;
+
+            border-radius: 30px;
+
+            font-size: 13px;
+
+            font-weight: 700;
+
+            margin-bottom: 22px;
+
+        }
+
+
+        .home-hero h1 {
+
+            font-size:
+                clamp(42px, 5vw, 68px);
+
+            line-height: 1.04;
+
+            letter-spacing: -2.5px;
+
+            color: #0f172a;
+
+            margin-bottom: 25px;
+
+        }
+
+
+        .home-hero h1 span {
+
+            color: #2563eb;
+
+        }
+
+
+        .home-hero p {
+
+            font-size: 18px;
+
+            line-height: 1.8;
+
+            color: #64748b;
+
+            max-width: 680px;
+
+            margin-bottom: 32px;
+
+        }
+
+
+        .hero-buttons {
+
+            display: flex;
+
+            gap: 14px;
+
+            flex-wrap: wrap;
+
+        }
+
+
+        .secondary-btn {
+
+            display: inline-flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            padding: 14px 25px;
+
+            border: 1px solid #cbd5e1;
+
+            background: white;
+
+            color: #0f172a;
+
+            text-decoration: none;
+
+            border-radius: 9px;
+
+            font-weight: 700;
+
+            transition: 0.2s;
+
+        }
+
+
+        .secondary-btn:hover {
+
+            border-color: #2563eb;
+
+            color: #2563eb;
+
+            transform: translateY(-2px);
+
+        }
+
+
+        /* =========================
+           HERO VISUAL
+        ========================= */
+
+        .hero-panel {
+
+            background: white;
+
+            border: 1px solid #e2e8f0;
+
+            border-radius: 22px;
+
+            padding: 25px;
+
+            box-shadow:
+                0 20px 50px
+                rgba(15,23,42,0.10);
+
+        }
+
+
+        .panel-header {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            margin-bottom: 25px;
+
+        }
+
+
+        .panel-header strong {
+
+            color: #0f172a;
+
+            font-size: 16px;
+
+        }
+
+
+        .live {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 6px;
+
+            color: #16a34a;
+
+            font-size: 12px;
+
+            font-weight: 700;
+
+        }
+
+
+        .live-dot {
+
+            width: 8px;
+
+            height: 8px;
+
+            border-radius: 50%;
+
+            background: #16a34a;
+
+        }
+
+
+        .metric {
+
+            padding: 18px;
+
+            background: #f8fafc;
+
+            border-radius: 13px;
+
+            margin-bottom: 12px;
+
+        }
+
+
+        .metric-top {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            margin-bottom: 10px;
+
+        }
+
+
+        .metric-label {
+
+            color: #64748b;
+
+            font-size: 13px;
+
+        }
+
+
+        .metric-value {
+
+            color: #0f172a;
+
+            font-size: 20px;
+
+            font-weight: 800;
+
+        }
+
+
+        .mini-bar {
+
+            height: 7px;
+
+            background: #e2e8f0;
+
+            border-radius: 20px;
+
+            overflow: hidden;
+
+        }
+
+
+        .mini-fill {
+
+            height: 100%;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    #2563eb,
+                    #60a5fa
+                );
+
+            border-radius: 20px;
+
+        }
+
+
+        /* =========================
+           PROBLEM
+        ========================= */
+
+        .problem-section {
+
+            padding: 85px 7%;
+
+            background: white;
+
+        }
+
+
+        .section-heading {
+
+            text-align: center;
+
+            max-width: 750px;
+
+            margin: 0 auto 45px;
+
+        }
+
+
+        .section-heading h2 {
+
+            font-size: 36px;
+
+            color: #0f172a;
+
+            margin-bottom: 12px;
+
+            letter-spacing: -1px;
+
+        }
+
+
+        .section-heading p {
+
+            color: #64748b;
+
+            line-height: 1.7;
+
+        }
+
+
+        .problem-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 22px;
+
+            max-width: 1200px;
+
+            margin: auto;
+
+        }
+
+
+        .problem-card {
+
+            padding: 30px;
+
+            background: #f8fafc;
+
+            border: 1px solid #e2e8f0;
+
+            border-radius: 16px;
+
+        }
+
+
+        .problem-number {
+
+            font-size: 13px;
+
+            color: #2563eb;
+
+            font-weight: 800;
+
+            margin-bottom: 12px;
+
+        }
+
+
+        .problem-card h3 {
+
+            font-size: 19px;
+
+            margin-bottom: 10px;
+
+            color: #0f172a;
+
+        }
+
+
+        .problem-card p {
+
+            color: #64748b;
+
+            line-height: 1.7;
+
+        }
+
+
+        /* =========================
+           PLATFORM
+        ========================= */
+
+        .platform-section {
+
+            padding: 90px 7%;
+
+            background: #f8fafc;
+
+        }
+
+
+        .platform-grid {
+
+            max-width: 1200px;
+
+            margin: auto;
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 20px;
+
+        }
+
+
+        .platform-card {
+
+            background: white;
+
+            border: 1px solid #e2e8f0;
+
+            border-radius: 16px;
+
+            padding: 28px;
+
+            transition: 0.2s;
+
+        }
+
+
+        .platform-card:hover {
+
+            transform:
+                translateY(-5px);
+
+            box-shadow:
+                0 15px 35px
+                rgba(15,23,42,0.08);
+
+        }
+
+
+        .platform-icon {
+
+            font-size: 30px;
+
+            margin-bottom: 18px;
+
+        }
+
+
+        .platform-card h3 {
+
+            color: #0f172a;
+
+            margin-bottom: 9px;
+
+        }
+
+
+        .platform-card p {
+
+            color: #64748b;
+
+            font-size: 14px;
+
+            line-height: 1.7;
+
+            margin-bottom: 18px;
+
+        }
+
+
+        .platform-card a {
+
+            color: #2563eb;
+
+            text-decoration: none;
+
+            font-size: 13px;
+
+            font-weight: 700;
+
+        }
+
+
+        /* =========================
+           HOW IT WORKS
+        ========================= */
+
+        .process-section {
+
+            padding: 90px 7%;
+
+            background: white;
+
+        }
+
+
+        .process-flow {
+
+            max-width: 1200px;
+
+            margin: auto;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+        }
+
+
+        .process-step {
+
+            flex: 1;
+
+            text-align: center;
+
+            padding: 25px 15px;
+
+            background: #f8fafc;
+
+            border: 1px solid #e2e8f0;
+
+            border-radius: 15px;
+
+        }
+
+
+        .process-step .number {
+
+            width: 38px;
+
+            height: 38px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            margin: 0 auto 12px;
+
+            border-radius: 50%;
+
+            background: #dbeafe;
+
+            color: #1d4ed8;
+
+            font-weight: 800;
+
+        }
+
+
+        .process-step h3 {
+
+            font-size: 15px;
+
+            color: #0f172a;
+
+        }
+
+
+        .process-arrow {
+
+            color: #2563eb;
+
+            font-size: 22px;
+
+        }
+
+
+        /* =========================
+           IMPACT
+        ========================= */
+
+        .impact-section {
+
+            padding: 85px 7%;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #0f172a,
+                    #172554
+                );
+
+            color: white;
+
+        }
+
+
+        .impact-content {
+
+            max-width: 1150px;
+
+            margin: auto;
+
+            display: grid;
+
+            grid-template-columns:
+                1fr
+                1fr;
+
+            gap: 60px;
+
+            align-items: center;
+
+        }
+
+
+        .impact-content h2 {
+
+            font-size: 38px;
+
+            margin-bottom: 18px;
+
+        }
+
+
+        .impact-content p {
+
+            color: #cbd5e1;
+
+            line-height: 1.8;
+
+        }
+
+
+        .impact-points {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, 1fr);
+
+            gap: 15px;
+
+        }
+
+
+        .impact-point {
+
+            padding: 22px;
+
+            border: 1px solid
+                rgba(255,255,255,0.12);
+
+            border-radius: 14px;
+
+            background:
+                rgba(255,255,255,0.05);
+
+        }
+
+
+        .impact-point strong {
+
+            display: block;
+
+            font-size: 22px;
+
+            margin-bottom: 5px;
+
+        }
+
+
+        .impact-point span {
+
+            color: #cbd5e1;
+
+            font-size: 13px;
+
+        }
+
+
+        /* =========================
+           CTA
+        ========================= */
+
+        .cta-section {
+
+            padding: 80px 7%;
+
+            text-align: center;
+
+            background: #eff6ff;
+
+        }
+
+
+        .cta-section h2 {
+
+            font-size: 36px;
+
+            color: #0f172a;
+
+            margin-bottom: 12px;
+
+        }
+
+
+        .cta-section p {
+
+            color: #64748b;
+
+            margin-bottom: 25px;
+
+        }
+
+
+        /* =========================
+           FOOTER
+        ========================= */
+
+        .footer {
+
+            padding: 28px 7%;
+
+            background: #0f172a;
+
+            color: #94a3b8;
+
+            text-align: center;
+
+            font-size: 13px;
+
+        }
+
+
+        /* =========================
+           RESPONSIVE
+        ========================= */
+
+        @media(max-width: 1000px) {
+
+            .hero-grid {
+
+                grid-template-columns: 1fr;
+
+            }
+
+            .platform-grid {
+
+                grid-template-columns:
+                    repeat(2, 1fr);
+
+            }
+
+            .problem-grid {
+
+                grid-template-columns: 1fr;
+
+            }
+
+            .impact-content {
+
+                grid-template-columns: 1fr;
+
+            }
+
+        }
+
+
+        @media(max-width: 700px) {
+
+            .platform-grid {
+
+                grid-template-columns: 1fr;
+
+            }
+
+            .process-flow {
+
+                flex-direction: column;
+
+            }
+
+            .process-arrow {
+
+                transform:
+                    rotate(90deg);
+
+            }
+
+            .impact-points {
+
+                grid-template-columns: 1fr;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================
+     NAVBAR
+========================= -->
+
+<nav class="navbar">
+
+    <div class="logo">
+        SkillTrack India
+    </div>
+
+
+    <div class="nav-links">
+
+        <a href="/">
+            Home
+        </a>
+
+        <a href="/candidate">
+            Register Candidate
+        </a>
+
+        <a href="/candidates">
+            Candidates
+        </a>
+
+        <a href="/skill-gap">
+            Skill Gaps
+        </a>
+
+        <a href="/intelligence">
+            AI Intelligence
+        </a>
+
+        <a href="/assessments">
+            Assessments
+        </a>
+
+        <a href="/counselling">
+            Counselling
+        </a>
+
+        <a href="/chatbot">
+            AI Chatbot
+        </a>
+
+        <a href="/jobs">
+            Jobs
+        </a>
+
+        <a href="/programs">
+            Programs
+        </a>
+
+        <a href="/employment">
+            Employment
+        </a>
+
+        <a href="/policy">
+            Policy
+        </a>
+
+        <a href="/dashboard">
+            Dashboard
+        </a>
+
+    </div>
+
+</nav>
+
+
+<!-- =========================
+     HERO
+========================= -->
+
+<section class="home-hero">
+
+    <div class="hero-grid">
+
+
+        <div>
+
+            <div class="hero-badge">
+
+                🇮🇳
+
+                Intelligent Skill & Employment Platform
+
+            </div>
+
+
+            <h1>
+
+                Bridging the Gap Between
+
+                <span>
+                    Skills & Employment
+                </span>
+
+            </h1>
+
+
+            <p>
+
+                SkillTrack India is a unified data-driven
+                platform that connects candidate skills,
+                training programs, employment outcomes and
+                industry demand to measure the real impact
+                of skilling initiatives.
+
+            </p>
+
+
+            <div class="hero-buttons">
+
+                <a
+                    href="/dashboard"
+                    class="btn">
+
+                    Explore Dashboard
+
+                </a>
+
+
+                <a
+                    href="/candidate"
+                    class="secondary-btn">
+
+                    Register Candidate
+
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <!-- HERO DASHBOARD -->
+
+        <div class="hero-panel">
+
+            <div class="panel-header">
+
+                <strong>
+                    Platform Intelligence
+                </strong>
+
+                <div class="live">
+
+                    <span class="live-dot"></span>
+
+                    Live Data
+
+                </div>
+
+            </div>
+
+
+            <div class="metric">
+
+                <div class="metric-top">
+
+                    <span class="metric-label">
+                        Candidate Tracking
+                    </span>
+
+                    <span class="metric-value">
+                        360°
+                    </span>
+
+                </div>
+
+                <div class="mini-bar">
+
+                    <div
+                        class="mini-fill"
+                        style="width:90%">
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="metric">
+
+                <div class="metric-top">
+
+                    <span class="metric-label">
+                        Skill Intelligence
+                    </span>
+
+                    <span class="metric-value">
+                        AI
+                    </span>
+
+                </div>
+
+                <div class="mini-bar">
+
+                    <div
+                        class="mini-fill"
+                        style="width:82%">
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="metric">
+
+                <div class="metric-top">
+
+                    <span class="metric-label">
+                        Job Matching
+                    </span>
+
+                    <span class="metric-value">
+                        Smart
+                    </span>
+
+                </div>
+
+                <div class="mini-bar">
+
+                    <div
+                        class="mini-fill"
+                        style="width:88%">
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="metric">
+
+                <div class="metric-top">
+
+                    <span class="metric-label">
+                        Policy Analytics
+                    </span>
+
+                    <span class="metric-value">
+                        Data
+                    </span>
+
+                </div>
+
+                <div class="mini-bar">
+
+                    <div
+                        class="mini-fill"
+                        style="width:78%">
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     PROBLEM
+========================= -->
+
+<section class="problem-section">
+
+
+    <div class="section-heading">
+
+        <h2>
+            The Problem We Solve
+        </h2>
+
+        <p>
+
+            Skilling initiatives often measure training
+            participation, but the real challenge is
+            understanding what happens after training.
+
+        </p>
+
+    </div>
+
+
+    <div class="problem-grid">
+
+
+        <div class="problem-card">
+
+            <div class="problem-number">
+                01 · TRACKING
+            </div>
+
+            <h3>
+                Employment Outcomes
+            </h3>
+
+            <p>
+
+                Difficulty in tracking whether trained
+                candidates actually enter employment,
+                change jobs or progress in their careers.
+
+            </p>
+
+        </div>
+
+
+        <div class="problem-card">
+
+            <div class="problem-number">
+                02 · INTELLIGENCE
+            </div>
+
+            <h3>
+                Skill Gaps
+            </h3>
+
+            <p>
+
+                Training programs may not always match
+                the skills currently demanded by
+                employers and industries.
+
+            </p>
+
+        </div>
+
+
+        <div class="problem-card">
+
+            <div class="problem-number">
+                03 · IMPACT
+            </div>
+
+            <h3>
+                Measuring Impact
+            </h3>
+
+            <p>
+
+                Without outcome data, it becomes difficult
+                to identify which skilling initiatives
+                are creating meaningful employment.
+
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     PLATFORM
+========================= -->
+
+<section class="platform-section">
+
+
+    <div class="section-heading">
+
+        <h2>
+            One Platform. Complete Skill Intelligence.
+        </h2>
+
+        <p>
+
+            Every major stage of the skilling journey
+            is connected in one system.
+
+        </p>
+
+    </div>
+
+
+    <div class="platform-grid">
+
+
+        <div class="platform-card">
+
+            <div class="platform-icon">
+                👤
+            </div>
+
+            <h3>
+                Candidate Management
+            </h3>
+
+            <p>
+
+                Maintain structured candidate profiles,
+                skills, qualifications, experience and
+                employment status.
+
+            </p>
+
+            <a href="/candidates">
+                Explore Candidates →
+            </a>
+
+        </div>
+
+
+        <div class="platform-card">
+
+            <div class="platform-icon">
+                🎯
+            </div>
+
+            <h3>
+                Skill Gap Analysis
+            </h3>
+
+            <p>
+
+                Compare candidate capabilities with
+                industry requirements and identify
+                missing skills.
+
+            </p>
+
+            <a href="/skill-gap">
+                Analyze Skill Gaps →
+            </a>
+
+        </div>
+
+
+        <div class="platform-card">
+
+            <div class="platform-icon">
+                🧠
+            </div>
+
+            <h3>
+                AI Skill Intelligence
+            </h3>
+
+            <p>
+
+                Generate readiness scores, priority
+                skill gaps and personalized learning
+                recommendations.
+
+            </p>
+
+            <a href="/intelligence">
+                View Intelligence →
+            </a>
+
+        </div>
+
+
+        <div class="platform-card">
+
+            <div class="platform-icon">
+                📝
+            </div>
+
+            <h3>
+                Smart Assessments
+            </h3>
+
+            <p>
+                Measure readiness across technical, digital,
+                communication, aptitude and job skills.
+            </p>
+
+            <a href="/assessments">
+                Take Assessment →
+            </a>
+
+        </div>
+
+
+        <div class="platform-card">
+
+            <div class="platform-icon">
+                🤝
+            </div>
+
+            <h3>
+                Expert Counselling
+            </h3>
+
+            <p>
+                Connect learners with relevant experts for
+                focused career and skill guidance.
+            </p>
+
+            <a href="/counselling">
+                Book Counselling →
+            </a>
+
+        </div>
+
+
+        <div class="platform-card">
+
+            <div class="platform-icon">
+                💼
+            </div>
+
+            <h3>
+                Smart Job Matching
+            </h3>
+
+            <p>
+
+                Match candidate skills with suitable
+                job roles and identify the strongest
+                employment opportunities.
+
+            </p>
+
+            <a href="/jobs">
+                Find Job Matches →
+            </a>
+
+        </div>
+
+
+        <div class="platform-card">
+
+            <div class="platform-icon">
+                🎓
+            </div>
+
+            <h3>
+                Training Programs
+            </h3>
+
+            <p>
+
+                Track enrolment, completion,
+                certification and employment outcomes
+                of skilling programs.
+
+            </p>
+
+            <a href="/programs">
+                View Programs →
+            </a>
+
+        </div>
+
+
+        <div class="platform-card">
+
+            <div class="platform-icon">
+                📊
+            </div>
+
+            <h3>
+                Employment Tracking
+            </h3>
+
+            <p>
+
+                Track placement, organizations,
+                job roles, salary ranges and career
+                progression.
+
+            </p>
+
+            <a href="/employment">
+                Track Outcomes →
+            </a>
+
+        </div>
+
+
+        <div class="platform-card">
+
+            <div class="platform-icon">
+                🏛️
+            </div>
+
+            <h3>
+                Policy Intelligence
+            </h3>
+
+            <p>
+
+                Convert skill, training and employment
+                data into actionable insights for
+                policymakers.
+
+            </p>
+
+            <a href="/policy">
+                View Policy Insights →
+            </a>
+
+        </div>
+
+
+        <div class="platform-card">
+
+            <div class="platform-icon">
+                📈
+            </div>
+
+            <h3>
+                Unified Dashboard
+            </h3>
+
+            <p>
+
+                Monitor the complete skilling ecosystem
+                through centralized analytics and
+                outcome indicators.
+
+            </p>
+
+            <a href="/dashboard">
+                Open Dashboard →
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     HOW IT WORKS
+========================= -->
+
+<section class="process-section">
+
+
+    <div class="section-heading">
+
+        <h2>
+            How SkillTrack Works
+        </h2>
+
+        <p>
+
+            The platform connects the complete journey
+            from candidate registration to measurable
+            employment impact.
+
+        </p>
+
+    </div>
+
+
+    <div class="process-flow">
+
+
+        <div class="process-step">
+
+            <div class="number">
+                1
+            </div>
+
+            <h3>
+                Candidate Data
+            </h3>
+
+        </div>
+
+
+        <div class="process-arrow">
+            →
+        </div>
+
+
+        <div class="process-step">
+
+            <div class="number">
+                2
+            </div>
+
+            <h3>
+                Skill Analysis
+            </h3>
+
+        </div>
+
+
+        <div class="process-arrow">
+            →
+        </div>
+
+
+        <div class="process-step">
+
+            <div class="number">
+                3
+            </div>
+
+            <h3>
+                Training
+            </h3>
+
+        </div>
+
+
+        <div class="process-arrow">
+            →
+        </div>
+
+
+        <div class="process-step">
+
+            <div class="number">
+                4
+            </div>
+
+            <h3>
+                Job Matching
+            </h3>
+
+        </div>
+
+
+        <div class="process-arrow">
+            →
+        </div>
+
+
+        <div class="process-step">
+
+            <div class="number">
+                5
+            </div>
+
+            <h3>
+                Employment Impact
+            </h3>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     IMPACT
+========================= -->
+
+<section class="impact-section">
+
+
+    <div class="impact-content">
+
+
+        <div>
+
+            <h2>
+                From Training Data
+                to Real Impact
+            </h2>
+
+            <p>
+
+                SkillTrack India helps stakeholders move
+                beyond counting how many people were
+                trained. The platform focuses on whether
+                those skills translate into employment,
+                career progression and measurable outcomes.
+
+            </p>
+
+        </div>
+
+
+        <div class="impact-points">
+
+
+            <div class="impact-point">
+
+                <strong>
+                    Skills
+                </strong>
+
+                <span>
+                    Identify current and emerging
+                    skill requirements.
+                </span>
+
+            </div>
+
+
+            <div class="impact-point">
+
+                <strong>
+                    Training
+                </strong>
+
+                <span>
+                    Measure participation and
+                    completion.
+                </span>
+
+            </div>
+
+
+            <div class="impact-point">
+
+                <strong>
+                    Employment
+                </strong>
+
+                <span>
+                    Track real-world placement
+                    outcomes.
+                </span>
+
+            </div>
+
+
+            <div class="impact-point">
+
+                <strong>
+                    Policy
+                </strong>
+
+                <span>
+                    Generate actionable
+                    recommendations.
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     CTA
+========================= -->
+
+<section class="cta-section">
+
+
+    <h2>
+        Turn Skilling Data Into Action
+    </h2>
+
+
+    <p>
+
+        Explore the SkillTrack India platform
+        and discover how skills translate into
+        employment outcomes.
+
+    </p>
+
+
+    <a
+        href="/dashboard"
+        class="btn">
+
+        Explore Platform
+
+    </a>
+
+</section>
+
+
+<!-- =========================
+     FOOTER
+========================= -->
+
+<footer class="footer">
+
+    © 2026 SkillTrack India ·
+    Intelligent Skill & Employment Analytics Platform
+
+</footer>
+
+
+</body>
+
+</html>
